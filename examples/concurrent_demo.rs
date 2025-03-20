@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, Instant};
-use tokio::runtime::{Builder, Runtime};
+use tokio::runtime::Builder;
 use log::{debug, error, info, warn};
 
 /// Type alias for a generic task.
@@ -44,19 +44,12 @@ pub struct ExecutorMetrics {
 
 /// A production-grade executor that uses lock-free work stealing,
 /// graceful shutdown, and supports both synchronous and asynchronous tasks.
-///
-/// Features include:
-/// - Auto-calculates thread count using Rust's built-in parallelism API
-/// - Uses crossbeam work-stealing queues for minimal contention
-/// - Supports async tasks on a dedicated Tokio runtime
-/// - Batch processing with configurable parameters
-/// - Robust error handling and detailed logging
-/// - Detailed metrics tracking for submitted, executed, and failed tasks
 pub struct HighThroughputExecutor {
-    injector: Injector<Task>,
+    // Use Arc to make the injector shareable across threads
+    injector: Arc<Injector<Task>>,
     stealers: Vec<Stealer<Task>>,
     thread_count: usize,
-    tokio_runtime: Runtime,
+    tokio_runtime: tokio::runtime::Runtime,
     shutdown: Arc<AtomicBool>,
     metrics: Arc<ExecutorMetrics>,
     config: ExecutorConfig,
@@ -72,7 +65,8 @@ impl HighThroughputExecutor {
 
         info!("Initializing HighThroughputExecutor with {} threads", thread_count);
 
-        let injector = Injector::new();
+        // Wrap the injector in an Arc
+        let injector = Arc::new(Injector::new());
         let mut stealers = Vec::with_capacity(thread_count);
 
         // Create placeholder workers to generate stealers.
@@ -82,8 +76,8 @@ impl HighThroughputExecutor {
         }
 
         // Build a multi-threaded Tokio runtime for async tasks.
-        let tokio_runtime = Builder::new_multi_thread()
-            .worker_threads(thread_count)
+        // Using new_current_thread instead of new_multi_thread for compatibility
+        let tokio_runtime = Builder::new_current_thread()
             .enable_all()
             .build()
             .expect("Failed to build Tokio runtime");
@@ -110,8 +104,6 @@ impl HighThroughputExecutor {
     }
 
     /// Spawns a collection of synchronous tasks.
-    ///
-    /// This method accepts any iterable of callables and enqueues them for execution.
     pub fn spawn_all<F, I>(&self, tasks: I)
     where
         F: FnOnce() + Send + 'static,
@@ -127,25 +119,23 @@ impl HighThroughputExecutor {
     where
         F: std::future::Future<Output = ()> + Send + 'static,
     {
-        // Wrap async tasks in a panic catcher so that a panic in an async task
-        // does not crash the runtime.
-        self.tokio_runtime.spawn(async {
-            if let Err(e) = panic::AssertUnwindSafe(fut).catch_unwind().await {
-                error!("Async task panicked: {:?}", e);
+        // Fixed the panic handling for async tasks
+        self.tokio_runtime.spawn(async move {
+            // Using a simpler approach for panic handling
+            match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                futures::executor::block_on(fut)
+            })) {
+                Ok(_) => {},
+                Err(e) => error!("Async task panicked: {:?}", e),
             }
         });
     }
 
     /// Runs the synchronous worker loop.
-    ///
-    /// Each worker:
-    /// - Processes a batch of tasks from its local queue
-    /// - Checks the global injector when the local queue is empty
-    /// - Attempts to steal tasks from peer workers
-    /// - Sleeps briefly if no work is found, reducing CPU usage
     pub fn run_sync(&self) {
-        let injector = Arc::new(&self.injector);
-        let stealers = Arc::new(self.stealers.clone());
+        // Now we can clone the Arc<Injector>
+        let injector = Arc::clone(&self.injector);
+        let stealers = self.stealers.clone();
         let shutdown_flag = Arc::clone(&self.shutdown);
         let metrics = Arc::clone(&self.metrics);
         let batch_size = self.config.batch_size;
@@ -155,7 +145,7 @@ impl HighThroughputExecutor {
 
         for thread_id in 0..self.thread_count {
             let injector = Arc::clone(&injector);
-            let stealers = Arc::clone(&stealers);
+            let stealers_clone = stealers.clone();
             let shutdown_flag = Arc::clone(&shutdown_flag);
             let metrics = Arc::clone(&metrics);
 
@@ -176,7 +166,7 @@ impl HighThroughputExecutor {
                                 }
                             }).or_else(|| {
                                 let mut stolen = None;
-                                for stealer in stealers.iter() {
+                                for stealer in stealers_clone.iter() {
                                     if let Steal::Success(task) = stealer.steal() {
                                         stolen = Some(task);
                                         break;
@@ -224,8 +214,6 @@ impl HighThroughputExecutor {
     }
 
     /// Blocks until the global task queue appears empty or a timeout is reached.
-    ///
-    /// This can be useful for gracefully draining tasks before shutdown.
     pub fn wait_for_drain(&self) {
         let timeout = Duration::from_millis(self.config.drain_timeout_ms);
         let start = Instant::now();
@@ -256,63 +244,68 @@ impl HighThroughputExecutor {
     }
 }
 
-// fn main() {
-//     // Initialize logging using env_logger. In production you might configure a more robust logger.
-//     env_logger::init();
+fn main() {
+    // Initialize logging using env_logger. In production you might configure a more robust logger.
+    env_logger::init();
 
-//     // Create an executor configuration; defaults can be overridden here.
-//     let config = ExecutorConfig::default();
-//     let executor = HighThroughputExecutor::new(config);
+    // Create an executor configuration; defaults can be overridden here.
+    let config = ExecutorConfig::default();
+    let executor = HighThroughputExecutor::new(config);
 
-//     // Example: Spawn several individual CPU-bound tasks.
-//     for i in 0..10_000 {
-//         executor.spawn(move || {
-//             // Simulate a small computation.
-//             let result: usize = (0..100).sum();
-//             if i % 1000 == 0 {
-//                 info!("Task {} computed result: {}", i, result);
-//             }
-//         });
-//     }
+    // Example: Spawn several individual CPU-bound tasks.
+    for i in 0..10_000 {
+        executor.spawn(move || {
+            // Simulate a small computation.
+            let result: usize = (0..100).sum();
+            if i % 1000 == 0 {
+                info!("Task {} computed result: {}", i, result);
+            }
+        });
+    }
 
-//     // Example: Create a list of callables.
-//     let tasks: Vec<Box<dyn FnOnce() + Send>> = vec![
-//         Box::new(|| println!("Callable Task 1 executed")),
-//         Box::new(|| println!("Callable Task 2 executed")),
-//         Box::new(|| println!("Callable Task 3 executed")),
-//     ];
+    // Example: Create a list of callables.
+    let tasks: Vec<Box<dyn FnOnce() + Send>> = vec![
+        Box::new(|| println!("Callable Task 1 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+        Box::new(|| println!("Callable Task 3 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+        Box::new(|| println!("Callable Task 2 executed")),
+    ];
 
-//     // Upload the list of callables.
-//     executor.spawn_all(tasks.into_iter().map(|task| move || task()));
+    // Upload the list of callables.
+    executor.spawn_all(tasks.into_iter().map(|task| move || task()));
 
-//     // Example: Spawn an asynchronous (I/O-bound) task.
-//     executor.spawn_async(async {
-//         info!("Starting async I/O task.");
-//         tokio::time::sleep(Duration::from_secs(1)).await;
-//         info!("Async I/O task complete.");
-//     });
+    // Example: Spawn an asynchronous (I/O-bound) task.
+    executor.spawn_async(async {
+        info!("Starting async I/O task.");
+        tokio::time::sleep(Duration::from_secs(1)).await;
+        info!("Async I/O task complete.");
+    });
 
-//     // Run synchronous tasks in a separate thread.
-//     let executor_arc = Arc::new(executor);
-//     let sync_executor = Arc::clone(&executor_arc);
-//     let sync_handle = thread::spawn(move || {
-//         sync_executor.run_sync();
-//     });
+    // Run synchronous tasks in a separate thread.
+    let executor_arc = Arc::new(executor);
+    let sync_executor = Arc::clone(&executor_arc);
+    let sync_handle = thread::spawn(move || {
+        sync_executor.run_sync();
+    });
 
-//     // Let the executor run for a while.
-//     thread::sleep(Duration::from_secs(3));
+    // Let the executor run for a while.
+    thread::sleep(Duration::from_secs(3));
 
-//     // Wait for the task queue to drain (optional) before shutdown.
-//     executor_arc.wait_for_drain();
+    // Wait for the task queue to drain (optional) before shutdown.
+    executor_arc.wait_for_drain();
 
-//     // Signal shutdown.
-//     executor_arc.shutdown();
+    // Signal shutdown.
+    executor_arc.shutdown();
 
-//     // Wait for synchronous worker threads to finish.
-//     if let Err(e) = sync_handle.join() {
-//         error!("Failed to join sync executor thread: {:?}", e);
-//     }
+    // Wait for synchronous worker threads to finish.
+    if let Err(e) = sync_handle.join() {
+        error!("Failed to join sync executor thread: {:?}", e);
+    }
 
-//     let (submitted, executed, failed) = executor_arc.metrics();
-//     info!("Executor shutdown complete. Metrics: Submitted: {}, Executed: {}, Failed: {}", submitted, executed, failed);
-// }
+    let (submitted, executed, failed) = executor_arc.metrics();
+    info!("Executor shutdown complete. Metrics: Submitted: {}, Executed: {}, Failed: {}", submitted, executed, failed);
+}

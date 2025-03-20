@@ -3,7 +3,7 @@
 pub mod agent;
 pub mod llm;
 pub mod tool;
+pub mod structs;
 
 mod conversation;
 mod persistence;
-// mod structs;

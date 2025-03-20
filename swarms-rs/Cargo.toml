@@ -3,57 +3,35 @@ name = "swarms-rs"
 version = "0.1.0"
 edition = "2021"
 description = "A Rust implementation of the Swarms framework for building multi-agent systems"
-authors = ["Kye Gomez <kye@swarms.world>"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/The-Swarms-Corporation/swarms-rs"
+authors = ["Kye Gomez <kye@kyegomez.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/yourusername/swarms-rs"
 documentation = "https://docs.rs/swarms-rs"
 readme = "README.md"
 keywords = ["ai", "agents", "swarms", "multi-agent", "llm"]
 categories = ["ai", "concurrency"]
 
 [dependencies]
-# Async runtime
-tokio = { workspace = true }
-
-# Serialization
-serde = { workspace = true }
-serde_json = { workspace = true }
-
-# Error handling
-thiserror = { workspace = true }
-
-# Date and time
-chrono = { workspace = true }
-
-# Async utilities
-futures = { workspace = true }
-
-# HTTP client
-reqwest = { workspace = true }
-
-# Compression
-zstd = { workspace = true }
-
-# Logging
-log = { workspace = true }
-env_logger = { workspace = true }
-
-# Concurrency
-crossbeam = { workspace = true }
+tokio = { version = "1.36", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+chrono = "0.4"
+futures = "0.3"
+reqwest = { version = "0.11", features = ["json"] }
+zstd = "0.13"
+log = "0.4"
+env_logger = "0.10"
+crossbeam = "0.8"
 
 [dev-dependencies]
 tokio-test = "0.4"
 mockall = "0.11"
 criterion = "0.5"
 
+# [[example]]
+# name = "concurrent_demo"
+
 [features]
 default = []
 experimental = []
-
-[[bench]]
-name = "executor_benchmark"
-harness = false
-
-[package.metadata.docs.rs]
-all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
