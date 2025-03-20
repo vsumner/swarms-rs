@@ -48,7 +48,7 @@ swarms-rs = "1.0"
 For development, clone the repository and build from source:
 
 ```bash
-git clone https://github.com/yourusername/swarms-rs.git
+git clone https://github.com/The-Swarm-Corporation/swarms-rs
 cd swarms-rs
 cargo build --release
 ```
@@ -285,7 +285,7 @@ We welcome contributions from the community! Please see our [CONTRIBUTING.md](li
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/swarms-rs.git
+   git clone https://github.com/The-Swarm-Corporation/swarms-rs
    cd swarms-rs
    ```
 
