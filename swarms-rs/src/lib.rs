@@ -6,3 +6,4 @@ pub mod tool;
 
 mod conversation;
 mod persistence;
+// mod structs;

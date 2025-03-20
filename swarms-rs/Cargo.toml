@@ -1,34 +1,59 @@
 [package]
 name = "swarms-rs"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+description = "A Rust implementation of the Swarms framework for building multi-agent systems"
+authors = ["Kye Gomez <kye@swarms.world>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/The-Swarms-Corporation/swarms-rs"
+documentation = "https://docs.rs/swarms-rs"
+readme = "README.md"
+keywords = ["ai", "agents", "swarms", "multi-agent", "llm"]
+categories = ["ai", "concurrency"]
 
 [dependencies]
-chrono = { version = "0.4", features = ["serde"] }
-dashmap = { version = "6", features = ["serde"] }
-tokio = { version = "1" }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-thiserror = "2"
-tracing = "0.1"
-twox-hash = "2.1"
-futures = "0.3"
-uuid = { version = "1.15", features = ["v4", "serde"] }
-zstd = "0.13.3"
-reqwest = { version = "0.12", features = [
-    "json",
-    "stream",
-    "multipart",
-    "rustls-tls-native-roots",
-], default-features = false }
+# Async runtime
+tokio = { workspace = true }
 
-# llm provider
-async-openai = { version = "0.28", features = ["byot"] }
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+
+# Date and time
+chrono = { workspace = true }
+
+# Async utilities
+futures = { workspace = true }
+
+# HTTP client
+reqwest = { workspace = true }
+
+# Compression
+zstd = { workspace = true }
+
+# Logging
+log = { workspace = true }
+env_logger = { workspace = true }
+
+# Concurrency
+crossbeam = { workspace = true }
 
 [dev-dependencies]
-anyhow = "1"
-console-subscriber = "0.4.1"
-dotenv = "0.15"
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "tracing"] }
 tokio-test = "0.4"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+mockall = "0.11"
+criterion = "0.5"
+
+[features]
+default = []
+experimental = []
+
+[[bench]]
+name = "executor_benchmark"
+harness = false
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
