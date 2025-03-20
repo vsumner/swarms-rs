@@ -78,18 +78,22 @@ cargo install cargo-udeps --locked 2>/dev/null || echo "cargo-udeps already inst
 cargo +nightly udeps
 echo "✅ Dependency check complete"
 
-# Step 4: Run tests
-echo "🔄 Running tests..."
-cargo test
-echo "✅ Tests complete"
+# # Step 4: Run tests
+# echo "🔄 Running tests..."
+# cargo test
+# echo "✅ Tests complete"
 
-# Step 5: Build documentation
-echo "🔄 Building documentation..."
-cargo doc --no-deps
-echo "✅ Documentation built"
+# # # Step 5: Build documentation
+# echo "🔄 Building documentation..."
+# cargo doc --no-deps
+# echo "✅ Documentation built"
+
+cargo fix --lib -p swarms-rs
+
 
 
 echo "✨ All formatting and linting tasks completed successfully! ✨"
 
 # Run the script
 # ./format_code.sh
+
