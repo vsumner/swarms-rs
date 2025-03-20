@@ -1,7 +1,6 @@
 use std::{cmp::Ordering, env};
 
 use async_openai::{
-    Client,
     config::OpenAIConfig,
     types::{
         ChatCompletionMessageToolCall, ChatCompletionRequestAssistantMessageArgs,
@@ -15,14 +14,16 @@ use async_openai::{
         ChatCompletionToolType, CreateChatCompletionRequestArgs, FunctionCall, FunctionObjectArgs,
         ImageUrl, InputAudio, InputAudioFormat,
     },
+    Client,
 };
 use futures::future::BoxFuture;
 
 use crate::{
-    agent::SwarmsAgentBuilder,  // Updated import path - now from crate::agent instead of crate::structs::agent
+    agent::SwarmsAgentBuilder, // Updated import path - now from crate::agent instead of crate::structs::agent
     llm::{
-        self, CompletionError, Model,
+        self,
         request::{CompletionRequest, CompletionResponse},
+        CompletionError, Model,
     },
 };
 
@@ -184,14 +185,14 @@ impl From<async_openai::error::OpenAIError> for CompletionError {
             async_openai::error::OpenAIError::Reqwest(e) => e.into(),
             async_openai::error::OpenAIError::ApiError(api_error) => {
                 CompletionError::Provider(api_error.to_string())
-            }
+            },
             async_openai::error::OpenAIError::JSONDeserialize(e) => e.into(),
             async_openai::error::OpenAIError::FileSaveError(e) => CompletionError::Other(e),
             async_openai::error::OpenAIError::FileReadError(e) => CompletionError::Other(e),
             async_openai::error::OpenAIError::StreamError(e) => CompletionError::Other(e),
             async_openai::error::OpenAIError::InvalidArgument(e) => {
                 CompletionError::Request(e.into())
-            }
+            },
         }
     }
 }
@@ -221,7 +222,7 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                 .map(|content| match content {
                                     llm::completion::ToolResultContent::Text(text) => {
                                         Ok(ChatCompletionRequestMessageContentPartText::from(text))
-                                    }
+                                    },
                                     _ => Err(CompletionError::Request(
                                         "OpenAI only supports text for now".into(),
                                     )),
@@ -275,14 +276,12 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                             _ => unimplemented!("Unsupported content type"),
                         })
                         .collect::<Result<Vec<ChatCompletionRequestUserMessageContentPart>, _>>()?;
-                        Ok(vec![
-                            ChatCompletionRequestUserMessageArgs::default()
-                                .content(content_array)
-                                .build()
-                                .unwrap() // Safety: All required fields are set
-                                .into(),
-                        ])
-                    }
+                        Ok(vec![ChatCompletionRequestUserMessageArgs::default()
+                            .content(content_array)
+                            .build()
+                            .unwrap() // Safety: All required fields are set
+                            .into()])
+                    },
                     Ordering::Equal => {
                         let content = match &other_content[0] {
                             llm::completion::UserContent::Text(text) => {
@@ -291,19 +290,18 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                     .build()
                                     .unwrap() // Safety: All required fields are set
                                     .into()
-                            }
+                            },
                             llm::completion::UserContent::Image(image) => {
-                                let content_part = vec![
-                                    ChatCompletionRequestMessageContentPartImage::from(image)
-                                        .into(),
-                                ];
+                                let content_part =
+                                    vec![ChatCompletionRequestMessageContentPartImage::from(image)
+                                        .into()];
 
                                 ChatCompletionRequestUserMessageArgs::default()
                                     .content(content_part)
                                     .build()
                                     .unwrap() // Safety: All required fields are set
                                     .into()
-                            }
+                            },
                             llm::completion::UserContent::Audio(audio) => {
                                 // Only support wav and mp3 for now, and must be base64 encoded
                                 if audio.format != Some(llm::completion::ContentFormat::Base64)
@@ -314,32 +312,31 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                 {
                                     return Err(CompletionError::Request("Only support wav and mp3 for now, and must be base64 encoded".into()));
                                 }
-                                let content_part = vec![
-                                    ChatCompletionRequestMessageContentPartAudio::from(
+                                let content_part =
+                                    vec![ChatCompletionRequestMessageContentPartAudio::from(
                                         audio.clone(),
                                     )
-                                    .into(),
-                                ];
+                                    .into()];
                                 ChatCompletionRequestUserMessageArgs::default()
                                     .content(content_part)
                                     .build()
                                     .unwrap()
                                     .into()
-                            }
+                            },
                             _ => {
                                 return Err(CompletionError::Request(
                                     "Unsupported content type".into(),
                                 ));
-                            }
+                            },
                         };
 
                         Ok(vec![content])
-                    }
+                    },
                     Ordering::Less => Err(CompletionError::Request(
                         "User message must have at least one content".into(),
                     )),
                 }
-            }
+            },
             llm::completion::Message::Assistant { content } => {
                 let (text_content, tool_calls) = content.into_iter().fold(
                     (Vec::new(), Vec::new()),
@@ -348,7 +345,7 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                             llm::completion::AssistantContent::Text(text) => texts.push(text),
                             llm::completion::AssistantContent::ToolCall(tool_call) => {
                                 tools.push(tool_call)
-                            }
+                            },
                         }
                         (texts, tools)
                     },
@@ -372,7 +369,7 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                             })
                             .collect::<Vec<_>>();
                         message_builder.tool_calls(tool_calls)
-                    }
+                    },
                     (Some(text_content), None) => {
                         let text_content = text_content
                             .into_iter()
@@ -383,7 +380,7 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                         let text_content = match text_content.len().cmp(&1) {
                             Ordering::Greater => {
                                 ChatCompletionRequestAssistantMessageContent::Array(text_content)
-                            }
+                            },
                             Ordering::Equal => {
                                 if let ChatCompletionRequestAssistantMessageContentPart::Text(
                                     content,
@@ -397,16 +394,16 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                         "Unsupported content type".into(),
                                     ));
                                 }
-                            }
+                            },
                             _ => unreachable!(),
                         };
                         message_builder.content(text_content)
-                    }
+                    },
                     _ => unreachable!(),
                 };
 
                 Ok(vec![message_builder.build().unwrap().into()])
-            }
+            },
         }
     }
 }

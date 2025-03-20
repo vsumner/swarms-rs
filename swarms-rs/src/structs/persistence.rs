@@ -25,7 +25,7 @@ pub async fn save_to_file(
             return Err(PersistenceError::MissingParent(
                 path.as_ref().to_string_lossy().to_string(),
             ));
-        }
+        },
     };
     fs::write(path, data).await.map_err(|e| e.into())
 }

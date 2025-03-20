@@ -194,7 +194,7 @@ impl Message {
                     }
                 }
                 None
-            }
+            },
             _ => None,
         }
     }

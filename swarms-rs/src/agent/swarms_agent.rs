@@ -6,17 +6,17 @@ use std::{
 };
 
 use dashmap::DashMap;
-use futures::{StreamExt, future::BoxFuture, stream};
+use futures::{future::BoxFuture, stream, StreamExt};
 use serde::Serialize;
 use tokio::sync::mpsc;
 use twox_hash::XxHash3_64;
 
 use crate::{
-    structs::conversation::{AgentShortMemory, Role},
     llm::{
         self,
         request::{CompletionRequest, ToolDefinition},
     },
+    structs::conversation::{AgentShortMemory, Role},
     structs::persistence,
     structs::tool::{Tool, ToolDyn},
 };
@@ -213,7 +213,7 @@ where
                 let result = tool.call(tool_call.arguments.to_string()).await?;
 
                 Ok(result)
-            }
+            },
         }
     }
 
@@ -303,7 +303,7 @@ where
                         Err(e) => {
                             self.handle_error_in_attempts(&task, e, attempt).await;
                             continue;
-                        }
+                        },
                     };
                     // needed to drop the lock
                     // if use:
@@ -381,10 +381,10 @@ where
                 match result {
                     Ok(result) => {
                         results.push(result);
-                    }
+                    },
                     Err(e) => {
                         tracing::error!("| Agent: {} | Task: {} | Error: {}", agent_name, task, e);
-                    }
+                    },
                 }
             }
 
@@ -432,7 +432,7 @@ where
                             return Err(AgentError::InvalidSaveStatePath(
                                 save_state_path.to_string_lossy().to_string(),
                             ));
-                        }
+                        },
                     };
                 }
                 let path = save_state_path

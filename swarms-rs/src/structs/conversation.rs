@@ -259,10 +259,10 @@ impl From<&AgentConversation> for Vec<crate::llm::completion::Message> {
             .map(|msg| match &msg.role {
                 Role::User(name) => {
                     crate::llm::completion::Message::user(format!("{}: {}", name, msg.content))
-                }
+                },
                 Role::Assistant(name) => {
                     crate::llm::completion::Message::assistant(format!("{}: {}", name, msg.content))
-                }
+                },
             })
             .collect()
     }

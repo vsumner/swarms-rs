@@ -1,7 +1,6 @@
 use futures::future::BoxFuture;
 use serde::{Deserialize, Serialize};
-use std::future::Future;  // Add this import
-
+use std::future::Future; // Add this import
 
 use crate::llm::request::ToolDefinition;
 

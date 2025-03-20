@@ -1,7 +1,7 @@
 use std::env;
 
 use anyhow::Result;
-use swarms_rs::{structs::agent::Agent, llm::provider::openai::OpenAI};
+use swarms_rs::{llm::provider::openai::OpenAI, structs::agent::Agent};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
