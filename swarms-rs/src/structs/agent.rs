@@ -3,10 +3,10 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use thiserror::Error;
 use tokio::sync::broadcast;
+use crate::structs::persistence::{self, PersistenceError};
+use crate::structs::tool::ToolError;
 
-use crate::{persistence, tool::ToolError};
-
-pub mod swarms_agent;
+// pub mod swarms_agent;
 
 #[derive(Debug, Error)]
 pub enum AgentError {

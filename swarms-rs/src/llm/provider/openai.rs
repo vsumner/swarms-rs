@@ -19,7 +19,7 @@ use async_openai::{
 use futures::future::BoxFuture;
 
 use crate::{
-    agent::swarms_agent::SwarmsAgentBuilder,
+    agent::SwarmsAgentBuilder,  // Updated import path - now from crate::agent instead of crate::structs::agent
     llm::{
         self, CompletionError, Model,
         request::{CompletionRequest, CompletionResponse},

@@ -12,16 +12,16 @@ use tokio::sync::mpsc;
 use twox_hash::XxHash3_64;
 
 use crate::{
-    conversation::{AgentShortMemory, Role},
+    structs::conversation::{AgentShortMemory, Role},
     llm::{
         self,
         request::{CompletionRequest, ToolDefinition},
     },
-    persistence,
-    tool::{Tool, ToolDyn},
+    structs::persistence,
+    structs::tool::{Tool, ToolDyn},
 };
 
-use super::{Agent, AgentConfig, AgentError};
+use crate::structs::agent::{Agent, AgentConfig, AgentError};
 
 pub struct SwarmsAgentBuilder<M>
 where

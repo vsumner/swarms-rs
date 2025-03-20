@@ -39,6 +39,7 @@ crossbeam = "*"
 log = "*"
 criterion = "*"
 env_logger = "*"
+rayon = "*"
 
 
 [dev-dependencies]

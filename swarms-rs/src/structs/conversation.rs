@@ -9,7 +9,8 @@ use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::persistence::{self, PersistenceError};
+// use crate::persistence::{self, PersistenceError};
+use crate::structs::persistence::{self, PersistenceError};
 
 #[derive(Debug, Error)]
 pub enum ConversationError {
