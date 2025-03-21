@@ -1,0 +1,3 @@
+[workspace]
+members = ["swarms-rs"]
+resolver = "3"
