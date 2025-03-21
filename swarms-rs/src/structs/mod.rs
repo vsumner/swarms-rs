@@ -6,6 +6,7 @@ pub mod persistence;
 pub mod swarm;
 pub mod tool;
 
-#[cfg(test)]
-mod test_utils;
 mod utils;
+
+#[cfg(test)]
+pub mod test_utils;

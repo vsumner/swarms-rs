@@ -13,22 +13,24 @@ fn run_async<F: std::future::Future<Output = T>, T>(future: F) -> T {
     rt.block_on(future)
 }
 
-fn create_mock_agent(id: &str, name: &str, response: &str) -> Box<dyn Agent> {
-    let agent = MockAgent::new(id, name, response);
+fn create_mock_agent(id: &str, name: &str, description: &str, response: &str) -> Box<dyn Agent> {
+    let agent = MockAgent::new(id, name, description, response);
     Box::new(agent)
 }
 
 struct MockAgent {
     id: String,
     name: String,
+    description: String,
     response: String,
 }
 
 impl MockAgent {
-    fn new(id: &str, name: &str, response: &str) -> Self {
+    fn new(id: &str, name: &str, description: &str, response: &str) -> Self {
         Self {
             id: id.to_string(),
             name: name.to_string(),
+            description: description.to_string(),
             response: response.to_string(),
         }
     }
@@ -81,6 +83,7 @@ impl Agent for MockAgent {
         Box::new(MockAgent {
             id: self.id.clone(),
             name: self.name.clone(),
+            description: self.description.clone(),
             response: self.response.clone(),
         })
     }
@@ -92,9 +95,13 @@ fn bench_linear_workflow(c: &mut Criterion) {
             run_async(async {
                 let mut workflow = DAGWorkflow::new("bench", "Benchmark workflow");
 
-                workflow.register_agent(create_mock_agent("1", "agent1", "response1"));
-                workflow.register_agent(create_mock_agent("2", "agent2", "response2"));
-                workflow.register_agent(create_mock_agent("3", "agent3", "response3"));
+                vec![
+                    create_mock_agent("1", "agent1", "description1", "response1"),
+                    create_mock_agent("2", "agent2", "description2", "response2"),
+                    create_mock_agent("3", "agent3", "description3", "response3"),
+                ]
+                .into_iter()
+                .for_each(|agent| workflow.register_agent(agent));
 
                 workflow
                     .connect_agents("agent1", "agent2", Flow::default())
@@ -118,11 +125,15 @@ fn bench_branching_workflow(c: &mut Criterion) {
             run_async(async {
                 let mut workflow = DAGWorkflow::new("bench", "Benchmark workflow");
 
-                workflow.register_agent(create_mock_agent("1", "agent1", "response1"));
-                workflow.register_agent(create_mock_agent("2", "agent2", "response2"));
-                workflow.register_agent(create_mock_agent("3", "agent3", "response3"));
-                workflow.register_agent(create_mock_agent("4", "agent4", "response4"));
-                workflow.register_agent(create_mock_agent("5", "agent5", "response5"));
+                vec![
+                    create_mock_agent("1", "agent1", "description1", "response1"),
+                    create_mock_agent("2", "agent2", "description2", "response2"),
+                    create_mock_agent("3", "agent3", "description3", "response3"),
+                    create_mock_agent("4", "agent4", "description4", "response4"),
+                    create_mock_agent("5", "agent5", "description5", "response5"),
+                ]
+                .into_iter()
+                .for_each(|agent| workflow.register_agent(agent));
 
                 workflow
                     .connect_agents("agent1", "agent2", Flow::default())
@@ -152,9 +163,13 @@ fn bench_workflow_with_transform(c: &mut Criterion) {
             run_async(async {
                 let mut workflow = DAGWorkflow::new("bench", "Benchmark workflow");
 
-                workflow.register_agent(create_mock_agent("1", "agent1", "response1"));
-                workflow.register_agent(create_mock_agent("2", "agent2", "response2"));
-                workflow.register_agent(create_mock_agent("3", "agent3", "response3"));
+                vec![
+                    create_mock_agent("1", "agent1", "description1", "response1"),
+                    create_mock_agent("2", "agent2", "description2", "response2"),
+                    create_mock_agent("3", "agent3", "description3", "response3"),
+                ]
+                .into_iter()
+                .for_each(|agent| workflow.register_agent(agent));
 
                 let transform_fn = Arc::new(|input: String| {
                     let mut result = String::with_capacity(input.len() + 20);
@@ -200,9 +215,13 @@ fn bench_workflow_with_condition(c: &mut Criterion) {
             run_async(async {
                 let mut workflow = DAGWorkflow::new("bench", "Benchmark workflow");
 
-                workflow.register_agent(create_mock_agent("1", "agent1", "response1"));
-                workflow.register_agent(create_mock_agent("2", "agent2", "response2"));
-                workflow.register_agent(create_mock_agent("3", "agent3", "response3"));
+                vec![
+                    create_mock_agent("1", "agent1", "description1", "response1"),
+                    create_mock_agent("2", "agent2", "description2", "response2"),
+                    create_mock_agent("3", "agent3", "description3", "response3"),
+                ]
+                .into_iter()
+                .for_each(|agent| workflow.register_agent(agent));
 
                 let true_condition = Arc::new(|_: &str| true);
                 let false_condition = Arc::new(|_: &str| false);
@@ -248,6 +267,7 @@ fn bench_large_workflow(c: &mut Criterion) {
                     workflow.register_agent(create_mock_agent(
                         &i.to_string(),
                         &format!("agent{}", i),
+                        &format!("description{}", i),
                         &format!("response{}", i),
                     ));
                 }
