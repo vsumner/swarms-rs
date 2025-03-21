@@ -6,7 +6,7 @@ use std::{
 };
 
 use dashmap::DashMap;
-use futures::{future::BoxFuture, stream, StreamExt};
+use futures::{StreamExt, future::BoxFuture, stream};
 use serde::Serialize;
 use tokio::sync::mpsc;
 use twox_hash::XxHash3_64;
@@ -131,8 +131,8 @@ where
         self
     }
 
-    pub fn save_sate_path(mut self, path: impl Into<String>) -> Self {
-        self.config.save_sate_path = Some(path.into());
+    pub fn save_state_dir(mut self, dir: impl Into<String>) -> Self {
+        self.config.save_state_dir = Some(dir.into());
         self
     }
 
@@ -162,8 +162,6 @@ where
     #[serde(skip)]
     tools_impl: DashMap<String, Arc<dyn ToolDyn>>,
 }
-
-// pub type ToolFunc = Box<dyn AsyncFn(serde_json::Value) -> String + Send + Sync>;
 
 impl<M> SwarmsAgent<M>
 where
@@ -421,7 +419,7 @@ where
         let task_hash = format!("{:x}", task_hash & 0xFFFFFFFF); // lower 32 bits of the hash
 
         Box::pin(async move {
-            let save_state_path = self.config.save_sate_path.clone();
+            let save_state_path = self.config.save_state_dir.clone();
             if let Some(save_state_path) = save_state_path {
                 let mut save_state_path = Path::new(&save_state_path);
                 // if save_state_path is a file, then use its parent directory

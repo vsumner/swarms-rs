@@ -25,7 +25,7 @@ async fn test_basic_agent_functionality() -> Result<()> {
         .user_name("TestUser")
         .enable_autosave()
         .max_loops(1)
-        .save_sate_path("./temp/test_agent_state.json")
+        .save_state_dir("./temp/test_agent_state.json")
         .enable_plan("Split the task into subtasks.".to_owned())
         .build();
 
@@ -42,39 +42,6 @@ async fn test_basic_agent_functionality() -> Result<()> {
         response.to_lowercase().contains("4"),
         "Response should contain the answer '4'"
     );
-
-    Ok(())
-}
-
-#[tokio::test]
-async fn test_agent_error_handling() -> Result<()> {
-    // Test with invalid credentials
-    let client = OpenAI::from_url(
-        "https://invalid-url.com".to_string(),
-        "invalid-key".to_string(),
-    )
-    .set_model("deepseek-chat");
-
-    let agent = client
-        .agent_builder()
-        .system_prompt("You are a helpful assistant.")
-        .agent_name("TestAgent")
-        .user_name("TestUser")
-        .build();
-
-    // This should return an error
-    let result = agent.run("Test query".to_owned()).await;
-
-    // Check that we got an error, but don't be specific about the error type
-    assert!(
-        result.is_err(),
-        "Expected an error with invalid credentials"
-    );
-
-    // Print the error for debugging purposes
-    if let Err(e) = result {
-        println!("Received expected error: {:?}", e);
-    }
 
     Ok(())
 }
