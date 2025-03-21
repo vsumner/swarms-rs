@@ -16,15 +16,15 @@ use tokio::sync::Mutex;
 
 use crate::structs::agent::Agent;
 
-// The main orchestration structure
+/// The main graph-based workflow structure
 pub struct DAGWorkflow {
     name: String,
     description: String,
-    // Store all registered agents
+    /// Store all registered agents
     agents: DashMap<String, Box<dyn Agent>>,
-    // The workflow graph
+    /// The workflow graph
     workflow: StableGraph<AgentNode, Flow>,
-    // Map from agent name to node index for quick lookup
+    /// Map from agent name to node index for quick lookup
     name_to_node: HashMap<String, NodeIndex>,
 }
 
@@ -39,7 +39,7 @@ impl DAGWorkflow {
         }
     }
 
-    // Register an agent with the orchestrator
+    /// Register an agent with the orchestrator
     pub fn register_agent(&mut self, agent: Box<dyn Agent>) {
         let agent_name = agent.name();
         self.agents.insert(agent_name.clone(), agent);
@@ -54,7 +54,7 @@ impl DAGWorkflow {
         }
     }
 
-    // Add a flow connection between two agents
+    /// Add a flow connection between two agents
     pub fn connect_agents(
         &mut self,
         from: &str,
@@ -105,7 +105,7 @@ impl DAGWorkflow {
         Ok(edge_idx)
     }
 
-    // Check if the workflow has a cycle
+    /// Check if the workflow has a cycle
     fn has_cycle(&self) -> bool {
         // Implementation using DFS to detect cycles
         let mut visited = vec![false; self.workflow.node_count()];
@@ -142,7 +142,7 @@ impl DAGWorkflow {
         false
     }
 
-    // Remove an agent connection
+    /// Remove an agent connection
     pub fn disconnect_agents(&mut self, from: &str, to: &str) -> Result<(), GraphWorkflowError> {
         let from_idx = self.name_to_node.get(from).ok_or_else(|| {
             GraphWorkflowError::AgentNotFound(format!("Source agent '{}' not found", from))
@@ -163,7 +163,7 @@ impl DAGWorkflow {
         }
     }
 
-    // Remove an agent from the orchestrator
+    /// Remove an agent from the orchestrator
     pub fn remove_agent(&mut self, name: &str) -> Result<(), GraphWorkflowError> {
         if let Some(node_idx) = self.name_to_node.remove(name) {
             self.workflow.remove_node(node_idx);
@@ -177,7 +177,7 @@ impl DAGWorkflow {
         }
     }
 
-    // Execute a specific agent
+    /// Execute a specific agent
     pub async fn execute_agent(
         &self,
         name: &str,
@@ -196,7 +196,7 @@ impl DAGWorkflow {
         }
     }
 
-    // Execute the entire workflow starting from a specific agent
+    /// Execute the entire workflow starting from a specific agent
     pub async fn execute_workflow(
         &mut self,
         start_agent: &str,
@@ -370,7 +370,7 @@ impl DAGWorkflow {
         result
     }
 
-    // Get the current workflow as a visualization-friendly format
+    /// Get the current workflow as a visualization-friendly format
     pub fn get_workflow_structure(&self) -> HashMap<String, Vec<(String, Option<String>)>> {
         let mut structure = HashMap::new();
 
@@ -398,7 +398,7 @@ impl DAGWorkflow {
         structure
     }
 
-    // Export the workflow to a format that can be visualized (e.g., DOT format for Graphviz)
+    /// Export the workflow to a format that can be visualized (e.g., DOT format for Graphviz)
     pub fn export_workflow_dot(&self) -> String {
         // TODO: can use petgraph's built-in dot
         // let dot = Dot::with_config(&self.workflow, &[dot::Config::EdgeNoLabel]);
@@ -434,7 +434,7 @@ impl DAGWorkflow {
         dot
     }
 
-    // Helper method to find all possible execution paths
+    /// Helper method to find all possible execution paths
     pub fn find_execution_paths(
         &self,
         start_agent: &str,
@@ -541,21 +541,21 @@ impl DAGWorkflow {
     }
 }
 
-// Edge weight to represent the flow of data between agents
+/// Edge weight to represent the flow of data between agents
 #[allow(clippy::type_complexity)]
 #[derive(Clone, Default)]
 pub struct Flow {
-    // Optional transformation function to apply to the output before passing to the next agent
+    /// Optional transformation function to apply to the output before passing to the next agent
     pub transform: Option<Arc<dyn Fn(String) -> String + Send + Sync>>,
-    // Optional condition to determine if this flow should be taken
+    /// Optional condition to determine if this flow should be taken
     pub condition: Option<Arc<dyn Fn(&str) -> bool + Send + Sync>>,
 }
 
-// Node weight for the graph
+/// Node weight for the graph
 #[derive(Debug)]
 pub struct AgentNode {
     pub name: String,
-    // Cache for execution results
+    /// Cache for execution results
     pub last_result: Mutex<Option<Result<String, GraphWorkflowError>>>,
 }
 
