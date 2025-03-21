@@ -409,7 +409,7 @@ where
     }
 
     fn query_long_term_memory(&self, task: String) -> BoxFuture<Result<(), AgentError>> {
-        todo!()
+        unimplemented!("query_long_term_memory not implemented")
     }
 
     fn save_task_state(&self, task: String) -> BoxFuture<Result<(), AgentError>> {
@@ -419,21 +419,14 @@ where
         let task_hash = format!("{:x}", task_hash & 0xFFFFFFFF); // lower 32 bits of the hash
 
         Box::pin(async move {
-            let save_state_path = self.config.save_state_dir.clone();
-            if let Some(save_state_path) = save_state_path {
-                let mut save_state_path = Path::new(&save_state_path);
-                // if save_state_path is a file, then use its parent directory
-                if !save_state_path.is_dir() {
-                    save_state_path = match save_state_path.parent() {
-                        Some(parent) => parent,
-                        None => {
-                            return Err(AgentError::InvalidSaveStatePath(
-                                save_state_path.to_string_lossy().to_string(),
-                            ));
-                        },
-                    };
+            let save_state_dir = self.config.save_state_dir.clone();
+            if let Some(save_state_dir) = save_state_dir {
+                let save_state_dir = Path::new(&save_state_dir);
+                if !save_state_dir.exists() {
+                    tokio::fs::create_dir_all(save_state_dir).await?;
                 }
-                let path = save_state_path
+
+                let path = save_state_dir
                     .join(format!("{}_{}", self.name(), task_hash))
                     .with_extension("json");
 
