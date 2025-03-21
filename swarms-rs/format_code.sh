@@ -88,8 +88,6 @@ echo "✅ Dependency check complete"
 # cargo doc --no-deps
 # echo "✅ Documentation built"
 
-cargo fix --lib -p swarms-rs
-
 
 
 echo "✨ All formatting and linting tasks completed successfully! ✨"
