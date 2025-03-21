@@ -1,8 +1,12 @@
 pub mod agent;
+pub mod concurrent_workflow;
 pub mod conversation;
 pub mod graph_workflow;
 pub mod persistence;
+pub mod swarm;
 pub mod tool;
 
+mod utils;
+
 #[cfg(test)]
-mod test_utils;
+pub mod test_utils;
