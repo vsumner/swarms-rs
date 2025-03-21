@@ -1,12 +1,10 @@
-use crate::structs::persistence::{self, PersistenceError};
+use crate::structs::persistence;
 use crate::structs::tool::ToolError;
 use futures::future::BoxFuture;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use thiserror::Error;
 use tokio::sync::broadcast;
-
-// pub mod swarms_agent;
 
 #[derive(Debug, Error)]
 pub enum AgentError {
