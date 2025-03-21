@@ -26,6 +26,10 @@ pub enum AgentError {
     ToolNotFound(String),
     #[error("Tool error: {0}")]
     ToolError(#[from] ToolError),
+
+    #[cfg(test)]
+    #[error("Test error")]
+    TestError(String),
 }
 
 #[derive(Clone)]
@@ -86,7 +90,7 @@ impl AgentConfigBuilder {
     }
 
     pub fn save_sate_path(mut self, path: impl Into<String>) -> Self {
-        self.config.save_sate_path = Some(path.into());
+        self.config.save_state_dir = Some(path.into());
         self
     }
 
@@ -121,7 +125,7 @@ pub struct AgentConfig {
     pub autosave: bool,
     pub retry_attempts: u32,
     pub rag_every_loop: bool,
-    pub save_sate_path: Option<String>,
+    pub save_state_dir: Option<String>,
     pub stop_words: HashSet<String>,
 }
 
@@ -148,7 +152,7 @@ impl Default for AgentConfig {
             autosave: false,
             retry_attempts: 3,
             rag_every_loop: false,
-            save_sate_path: None,
+            save_state_dir: None,
             stop_words: HashSet::new(),
         }
     }
