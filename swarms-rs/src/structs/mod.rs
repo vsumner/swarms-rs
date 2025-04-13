@@ -5,6 +5,7 @@ pub mod graph_workflow;
 pub mod persistence;
 pub mod swarm;
 pub mod tool;
+pub mod meme_agent_generator;
 
 mod utils;
 
