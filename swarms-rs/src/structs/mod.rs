@@ -6,6 +6,7 @@ pub mod persistence;
 pub mod sequential_workflow;
 pub mod swarm;
 pub mod tool;
+pub mod meme_agent_generator;
 
 mod utils;
 
