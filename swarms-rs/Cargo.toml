@@ -46,6 +46,13 @@ reqwest = { version = "0.12", features = [
 # LLM provider
 async-openai = { version = "0.28", features = ["byot"] }
 
+# MCP, keep latest version for now
+rmcp = { git = "https://github.com/modelcontextprotocol/rust-sdk", branch = "main", features = [
+    "client",
+    "transport-sse",
+    "transport-child-process",
+] }
+
 [dev-dependencies]
 anyhow = "1"
 dotenv = "0.15"

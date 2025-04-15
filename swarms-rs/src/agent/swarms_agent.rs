@@ -1,4 +1,5 @@
 use std::{
+    ffi::OsStr,
     hash::{Hash, Hasher},
     ops::Deref,
     path::Path,
@@ -7,8 +8,14 @@ use std::{
 
 use dashmap::DashMap;
 use futures::{StreamExt, future::BoxFuture, stream};
+use reqwest::IntoUrl;
+use rmcp::{
+    ServiceExt,
+    model::{ClientCapabilities, ClientInfo, Implementation},
+    transport::{SseTransport, TokioChildProcess},
+};
 use serde::Serialize;
-use tokio::sync::mpsc;
+use tokio::{process::Command, sync::mpsc};
 use twox_hash::XxHash3_64;
 
 use crate::{
@@ -16,9 +23,11 @@ use crate::{
         self,
         request::{CompletionRequest, ToolDefinition},
     },
-    structs::conversation::{AgentShortMemory, Role},
-    structs::persistence,
-    structs::tool::{Tool, ToolDyn},
+    structs::{
+        conversation::{AgentShortMemory, Role},
+        persistence,
+        tool::{MCPTool, Tool, ToolDyn},
+    },
 };
 
 use crate::structs::agent::{Agent, AgentConfig, AgentError};
@@ -65,6 +74,57 @@ where
         self.tools_impl
             .insert(tool.name().to_string(), Arc::new(tool) as Arc<dyn ToolDyn>);
         self
+    }
+
+    pub async fn add_sse_mcp_server(self, name: impl Into<String>, url: impl IntoUrl) -> Self {
+        let name = name.into();
+
+        let transport = SseTransport::start(url)
+            .await
+            .expect("Failed to start SSE transport");
+
+        let client_info = ClientInfo {
+            protocol_version: Default::default(),
+            capabilities: ClientCapabilities::default(),
+            client_info: Implementation {
+                name: name.clone(),
+                version: "".to_owned(),
+            },
+        };
+
+        let client = Arc::new(
+            client_info
+                .into_dyn()
+                .serve(transport)
+                .await
+                .expect("Failed to start MCP server"),
+        );
+
+        let mcp_tools = client.list_all_tools().await.expect("Failed to list tools");
+        mcp_tools.into_iter().fold(self, |acc, tool| {
+            acc.add_tool(MCPTool::from_server(tool, Arc::clone(&client)))
+        })
+    }
+
+    pub async fn add_stdio_mcp_server<I, S>(self, command: S, args: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<OsStr>,
+    {
+        let service = Arc::new(
+            ().into_dyn()
+                .serve(TokioChildProcess::new(Command::new(command).args(args)).unwrap())
+                .await
+                .expect("Failed to start MCP server"),
+        );
+
+        let mcp_tools = service
+            .list_all_tools()
+            .await
+            .expect("Failed to list tools");
+        mcp_tools.into_iter().fold(self, |acc, tool| {
+            acc.add_tool(MCPTool::from_server(tool, Arc::clone(&service)))
+        })
     }
 
     pub fn build(self) -> SwarmsAgent<M> {
@@ -199,18 +259,41 @@ where
         match ToOwned::to_owned(choice) {
             llm::completion::AssistantContent::Text(text) => Ok(text.text),
             llm::completion::AssistantContent::ToolCall(tool_call) => {
-                let tool_call = tool_call.function;
+                let mut all_tool_calls = vec![tool_call.function];
+                all_tool_calls.extend(response.choice.iter().skip(1).filter_map(|choice| {
+                    match ToOwned::to_owned(choice) {
+                        llm::completion::AssistantContent::Text(_) => None,
+                        llm::completion::AssistantContent::ToolCall(tool_call) => {
+                            Some(tool_call.function)
+                        },
+                    }
+                }));
 
-                let tool = Arc::clone(
-                    self.tools_impl
-                        .get(&tool_call.name)
-                        .ok_or(AgentError::ToolNotFound(tool_call.name))?
-                        .deref(),
-                );
+                let mut results = Vec::new();
+                for tool_call in all_tool_calls {
+                    let tool = Arc::clone(
+                        self.tools_impl
+                            .get(&tool_call.name)
+                            .ok_or(AgentError::ToolNotFound(tool_call.name.clone()))?
+                            .deref(),
+                    );
+                    let args = tool_call.arguments.to_string();
+                    let result = tool.call(args).await?;
+                    results.push((tool_call.name, result));
+                }
 
-                let result = tool.call(tool_call.arguments.to_string()).await?;
-
-                Ok(result)
+                if results.len() == 1 {
+                    Ok(results[0].1.clone())
+                } else {
+                    let mut combined_result = String::new();
+                    for (tool_name, tool_result) in results {
+                        combined_result.push_str(&format!(
+                            "[Tool name]: {}\n[Tool result]: {}\n\n",
+                            tool_name, tool_result
+                        ));
+                    }
+                    Ok(combined_result)
+                }
             },
         }
     }
