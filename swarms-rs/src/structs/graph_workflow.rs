@@ -18,8 +18,8 @@ use crate::structs::agent::Agent;
 
 /// The main graph-based workflow structure
 pub struct DAGWorkflow {
-    name: String,
-    description: String,
+    pub name: String,
+    pub description: String,
     /// Store all registered agents
     agents: DashMap<String, Box<dyn Agent>>,
     /// The workflow graph
