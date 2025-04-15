@@ -408,7 +408,7 @@ where
         })
     }
 
-    fn query_long_term_memory(&self, task: String) -> BoxFuture<Result<(), AgentError>> {
+    fn query_long_term_memory(&self, _task: String) -> BoxFuture<Result<(), AgentError>> {
         unimplemented!("query_long_term_memory not implemented")
     }
 

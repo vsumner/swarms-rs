@@ -3,6 +3,7 @@ pub mod concurrent_workflow;
 pub mod conversation;
 pub mod graph_workflow;
 pub mod persistence;
+pub mod sequential_workflow;
 pub mod swarm;
 pub mod tool;
 
