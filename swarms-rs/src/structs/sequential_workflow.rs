@@ -98,11 +98,8 @@ impl SequentialWorkflow {
         let mut agents_output_schema = Vec::with_capacity(self.agents.len());
         for agent in &self.agents {
             let output = run_agent_with_output_schema(agent.deref(), next_input.clone()).await?;
-            conversation.add(
-                Role::Assistant(agent.name().to_owned()),
-                output.output.clone(),
-            );
-            next_input = output.output.clone();
+            conversation.add(Role::Assistant(agent.name()), output.output.clone());
+            next_input = format!("[From Agent] {}:\n{}", agent.name(), output.output);
             agents_output_schema.push(output);
         }
 
