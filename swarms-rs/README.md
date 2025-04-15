@@ -43,14 +43,8 @@ Add `swarms-rs` to your `Cargo.toml`:
 ```toml
 [dependencies]
 swarms-rs = "0.1"
-```
-
-For development, clone the repository and build from source:
-
-```bash
-git clone https://github.com/The-Swarm-Corporation/swarms-rs
-cd swarms-rs
-cargo build --release
+# Or use the latest version from GitHub
+swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
 ```
 
 ### Environment Setup
@@ -78,6 +72,29 @@ cargo run --example graph_workflow
 
 `DEEPSEEK_API_KEY` and `DEEPSEEK_BASE_URL` environment variables are read by default.
 
+## MCP Tool Support
+
+`swarms-rs` supports the Model Context Protocol (MCP), enabling agents to interact with external tools through standardized interfaces. This powerful feature allows your agents to access real-world data and perform actions beyond their language capabilities.
+
+### Supported MCP Server Types
+
+- **STDIO MCP Servers**: Connect to command-line tools that implement the MCP protocol
+- **SSE MCP Servers**: Connect to web-based MCP servers using Server-Sent Events
+
+### Example Usage
+
+```rust
+// Add a STDIO MCP server
+.add_stdio_mcp_server("uvx", ["mcp-hn"])
+.await
+
+// Add an SSE MCP server
+.add_sse_mcp_server("example-sse-mcp-server", "http://127.0.0.1:8000/sse")
+.await
+```
+
+See the [mcp_tool.rs](swarms-rs/examples/mcp_tool.rs) example for a complete implementation.
+
 ## Architecture
 
 `swarms-rs` is built with a modular architecture that allows for easy extension and customization:
@@ -85,6 +102,7 @@ cargo run --example graph_workflow
 - **Agent Layer**: Core agent implementation with memory management and tool integration
 - **LLM Provider Layer**: Abstraction for different LLM providers (OpenAI, DeepSeek, etc.)
 - **Tool System**: Extensible tool framework for adding capabilities to agents
+- **MCP Integration**: Support for Model Context Protocol tools via STDIO and SSE interfaces
 - **Swarm Orchestration**: Coordination of multiple agents for complex workflows
 - **Persistence Layer**: State management and recovery mechanisms
 
