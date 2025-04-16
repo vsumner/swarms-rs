@@ -157,10 +157,11 @@ impl Tool for MCPTool {
                         blob
                     ),
                 },
-                rmcp::model::RawContent::Audio(annotated) => format!(
-                    "data:{};base64,{}",
-                    annotated.raw.mime_type, annotated.raw.data
-                ),
+                // TODO: latest version should uncomment the following line, but now we use old version
+                // rmcp::model::RawContent::Audio(annotated) => format!(
+                //     "data:{};base64,{}",
+                //     annotated.raw.mime_type, annotated.raw.data
+                // ),
             })
             .collect::<Vec<_>>()
             .join(""))
@@ -177,7 +178,8 @@ impl From<&rmcp::model::Tool> for ToolDefinition {
         let description = value
             .to_owned()
             .description
-            .unwrap_or(name.clone().into())
+            // TODO: latest version should uncomment the following line, but now we use old version
+            // .unwrap_or(name.clone().into())
             .to_string();
         let parameters = serde_json::Value::Object(value.input_schema.deref().to_owned());
 
