@@ -1,6 +1,6 @@
 [package]
 name = "swarms-rs"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 description = "A Rust implementation of the Swarms framework for building multi-agent systems"
 authors = ["Kye Gomez <kye@kyegomez.com>"]
