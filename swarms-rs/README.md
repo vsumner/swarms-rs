@@ -55,7 +55,7 @@ DEEPSEEK_API_KEY=your_deepseek_key_here
 DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
 ```
 
-# Framework Architecture
+## Framework Architecture
 
 In swarms-rs, we modularize the framework into three primary architectural stages, each building upon the previous to create increasingly sophisticated agent systems:
 
@@ -105,20 +105,76 @@ This modular architecture allows for flexible deployment scenarios, from simple 
 
 
 
+## Agents
 
-## Run Examples
+An agent is an entity powered by an LLM equippied with tools and memory that can run autonomously to automate issues. Here's an examp
 
-In [swarms-rs/examples](swarms-rs/examples/) there is our sample code, which can provide a considerable degree of reference:
+```rust
+use std::env;
 
-To run the graph workflow example:
+use anyhow::Result;
+use swarms_rs::{llm::provider::openai::OpenAI, structs::agent::Agent};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-```bash
-cargo run --example graph_workflow
+#[tokio::main]
+async fn main() -> Result<()> {
+    dotenv::dotenv().ok();
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::from_default_env())
+        .with(
+            tracing_subscriber::fmt::layer()
+                .with_line_number(true)
+                .with_file(true),
+        )
+        .init();
+
+    let base_url = env::var("DEEPSEEK_BASE_URL").unwrap();
+    let api_key = env::var("DEEPSEEK_API_KEY").unwrap();
+        let client = OpenAI::from_url(base_url, api_key).set_model("deepseek-chat");
+    let agent = client
+        .agent_builder()
+        .system_prompt(
+            "You are a sophisticated cryptocurrency analysis assistant specialized in:
+            1. Technical analysis of crypto markets
+            2. Fundamental analysis of blockchain projects
+            3. Market sentiment analysis
+            4. Risk assessment
+            5. Trading patterns recognition
+            
+            When analyzing cryptocurrencies, always consider:
+            - Market capitalization and volume
+            - Historical price trends
+            - Project fundamentals and technology
+            - Recent news and developments
+            - Market sentiment indicators
+            - Potential risks and opportunities
+            
+            Provide clear, data-driven insights and always include relevant disclaimers about market volatility."
+        )
+        .agent_name("CryptoAnalyst")
+        .user_name("Trader")
+        .enable_autosave()
+        .max_loops(3)  // Increased to allow for more thorough analysis
+        .save_state_dir("./crypto_analysis/")
+        .enable_plan("Break down the crypto analysis into systematic steps:
+            1. Gather market data
+            2. Analyze technical indicators
+            3. Review fundamental factors
+            4. Assess market sentiment
+            5. Provide comprehensive insights".to_owned())
+        .build();
+    let response = agent
+        .run("What is the meaning of life?".to_owned())
+        .await
+        .unwrap();
+    println!("{response}");
+    Ok(())
+}
+
 ```
 
-`DEEPSEEK_API_KEY` and `DEEPSEEK_BASE_URL` environment variables are read by default.
 
-## MCP Tool Support
+### MCP Tool Support
 
 `swarms-rs` supports the Model Context Protocol (MCP), enabling agents to interact with external tools through standardized interfaces. This powerful feature allows your agents to access real-world data and perform actions beyond their language capabilities.
 
@@ -141,7 +197,7 @@ cargo run --example graph_workflow
 
 ----
 
-## Full Example
+### Full MCP Agent Example
 
 ```rust
 use std::env;
@@ -200,6 +256,20 @@ async fn main() -> Result<()> {
 
 
 See the [mcp_tool.rs](swarms-rs/examples/mcp_tool.rs) example for a complete implementation.
+
+
+
+## Run Examples
+
+In [swarms-rs/examples](swarms-rs/examples/) there is our sample code, which can provide a considerable degree of reference:
+
+To run the graph workflow example:
+
+```bash
+cargo run --example graph_workflow
+```
+
+`DEEPSEEK_API_KEY` and `DEEPSEEK_BASE_URL` environment variables are read by default.
 
 ----
 
