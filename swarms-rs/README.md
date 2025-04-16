@@ -55,6 +55,57 @@ DEEPSEEK_API_KEY=your_deepseek_key_here
 DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
 ```
 
+# Framework Architecture
+
+In swarms-rs, we modularize the framework into three primary architectural stages, each building upon the previous to create increasingly sophisticated agent systems:
+
+
+```mermaid
+graph TD
+    A[Framework Architecture] --> B[1. Agent Layer]
+    A --> C[2. Multi-Agent Structures]
+    A --> D[3. Cascading Systems]
+    
+    B --> B1[LLM Integration]
+    B --> B2[Tool System]
+    B --> B3[Memory Management]
+    
+    C --> C1[Sequential Workflow]
+    C --> C2[Concurrent Workflow]
+    C --> C3[Communication Protocols]
+    
+    D --> D1[Agent Networks]
+    D --> D2[Hierarchical Systems]
+    D --> D3[Swarm Intelligence]
+```
+
+1. **Agents (LLM + Tools + Memory)**
+   - **Language Models**: Integration with various LLM providers (OpenAI, DeepSeek, etc.)
+   - **Tool System**: Extensible framework for adding capabilities through MCP and custom tools
+   - **Memory Management**: Short-term and long-term memory systems for maintaining context
+   - **State Management**: Handling agent state, configuration, and runtime parameters
+
+2. **Multi-Agent Structures and Communication**
+   - **Sequential Workflows**: Linear progression of tasks between multiple agents
+   - **Concurrent Workflows**: Parallel execution of tasks across multiple agents
+   - **Communication Protocols**: Standardized methods for inter-agent communication
+   - **Task Distribution**: Intelligent distribution of workload across agent networks
+   - **Synchronization**: Mechanisms for coordinating agent activities and sharing results
+
+3. **Cascading Multi-Agent Systems**
+   - **Hierarchical Organizations**: Multi-level agent structures with specialized roles
+   - **Swarm Intelligence**: Emergent behavior from large-scale agent interactions
+   - **Dynamic Scaling**: Ability to scale agent networks based on workload
+   - **Fault Tolerance**: Robust error handling and system recovery
+   - **Resource Optimization**: Efficient allocation and utilization of system resources
+
+This modular architecture allows for flexible deployment scenarios, from simple single-agent applications to complex, distributed multi-agent systems. Each layer is designed to be extensible, allowing developers to customize and enhance functionality while maintaining the core benefits of the framework's enterprise-grade reliability and performance.
+
+
+
+
+
+
 ## Run Examples
 
 In [swarms-rs/examples](swarms-rs/examples/) there is our sample code, which can provide a considerable degree of reference:
