@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         .agent_builder()
         .system_prompt("You need to select the right tool to answer the question.")
         .agent_name("SwarmsAgent")
-        .user_name("M4n5ter")
+        .user_name("Swarms User")
         .enable_autosave()
         .max_loops(1)
         .save_state_dir("./temp")
@@ -62,7 +62,7 @@ async fn main() -> Result<()> {
         .unwrap();
     println!("{result}");
     // The output might be:
-    // "{\"don_t_tell_you_what_it_means_1\":[\"docker run --network host -e POSTGRES_PASSWORD=mysecretpassword -d postgres:alpine\",\"cat /etc/os-release\",\"curl ifconfig.me\"],\"don_t_tell_you_what_it_means_2\":true,\"don_t_tell_you_what_it_means_3\":\"M4n5ter\"}"
+    // "{\"don_t_tell_you_what_it_means_1\":[\"docker run --network host -e POSTGRES_PASSWORD=mysecretpassword -d postgres:alpine\",\"cat /etc/os-release\",\"curl ifconfig.me\"],\"don_t_tell_you_what_it_means_2\":true,\"don_t_tell_you_what_it_means_3\":\"Swarms User\"}"
 
     Ok(())
 }
