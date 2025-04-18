@@ -4,7 +4,8 @@ This folder contains numerous examples showing how to use swarms-rs. Each exampl
 
 ## Running an example
 
+At the root of the project:
+
 ```shell
-cd examples/binance-swarms-agent
-cargo run
+cargo run --package binance-swarms-agent
 ```
