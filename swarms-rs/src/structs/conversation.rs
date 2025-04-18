@@ -67,10 +67,10 @@ impl AgentConversation {
 
     /// Add a message to the conversation history.
     pub fn add(&mut self, role: Role, message: String) {
-        let timestamp = Local::now().timestamp();
+        let timestamp = Local::now().timestamp_millis();
         let message = Message {
             role,
-            content: Content::Text(format!("Time: {timestamp} \n{message}")),
+            content: Content::Text(format!("Timestamp(millis): {timestamp} \n{message}")),
         };
         self.history.push(message);
 
