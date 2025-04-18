@@ -123,8 +123,10 @@ impl Model for OpenAI {
 
             msgs.extend(chat_history);
 
-            let prompt: Vec<ChatCompletionRequestMessage> = request.prompt.try_into()?;
-            msgs.extend(prompt);
+            if request.prompt.rag_text().is_some() {
+                let prompt: Vec<ChatCompletionRequestMessage> = request.prompt.try_into()?;
+                msgs.extend(prompt);
+            }
 
             let mut create_request_builder = CreateChatCompletionRequestArgs::default();
             if let Some(max_tokens) = request.max_tokens {

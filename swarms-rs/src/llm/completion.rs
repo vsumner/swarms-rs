@@ -183,8 +183,6 @@ pub enum ImageDetail {
 // ================================================================
 
 impl Message {
-    // TODO: Remove this macro
-    #[allow(dead_code)]
     /// This helper method is primarily used to extract the first string prompt from a `Message`.
     /// Since `Message` might have more than just text content, we need to find the first text.
     pub(crate) fn rag_text(&self) -> Option<String> {
@@ -192,6 +190,9 @@ impl Message {
             Message::User { content } => {
                 for item in content.iter() {
                     if let UserContent::Text(Text { text }) = item {
+                        if text.is_empty() {
+                            continue;
+                        }
                         return Some(text.clone());
                     }
                 }

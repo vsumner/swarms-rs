@@ -127,6 +127,7 @@ pub struct AgentConfig {
     pub rag_every_loop: bool,
     pub save_state_dir: Option<String>,
     pub stop_words: HashSet<String>,
+    pub task_evaluator_tool_enabled: bool,
 }
 
 impl AgentConfig {
@@ -154,6 +155,7 @@ impl Default for AgentConfig {
             rag_every_loop: false,
             save_state_dir: None,
             stop_words: HashSet::new(),
+            task_evaluator_tool_enabled: true,
         }
     }
 }
