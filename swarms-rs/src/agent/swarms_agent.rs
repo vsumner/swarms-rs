@@ -394,7 +394,6 @@ where
 
             // Run agent loop
             let mut last_response_text = String::new();
-            let mut all_responses = vec![];
             let mut task_complete = false;
             let mut was_prev_call_task_evaluator = false;
             for loop_count in 0..self.config.max_loops {
@@ -557,12 +556,6 @@ where
                         assistant_memory_content.clone(), // Add the text or formatted tool calls
                     );
 
-                    // Add meaningful text response to all_responses
-                    // Avoid adding raw tool call formatting unless it's the final completion message
-                    if !is_task_evaluator_called || task_complete {
-                        all_responses.push(last_response_text.clone());
-                    }
-
                     // TODO: evaluate response
                     // TODO: Sentiment analysis
 
@@ -597,7 +590,12 @@ where
             // TODO: Handle artifacts
 
             // TODO: More flexible output types, e.g. JSON, CSV, etc.
-            Ok(all_responses.concat())
+            Ok(self
+                .short_memory
+                .0
+                .get(&task)
+                .expect("Task should exist in short memory")
+                .to_string())
         })
     }
 
