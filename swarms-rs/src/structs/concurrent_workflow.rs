@@ -280,23 +280,19 @@ mod tests {
         assert_eq!(result_history[0].role, Role::User("User".to_owned()));
 
         let Content::Text(content0) = result_history[0].content.clone();
-        // should be like "Time: 1742525911 \ntest task"
-        assert!(content0.contains("Time:"));
+        assert!(content0.contains("Timestamp(millis):"));
         assert!(content0.contains("test task"));
 
         let Content::Text(content1) = result_history[1].content.clone();
-        // should be like "Time: 1742525911 \nresponse1"
-        assert!(content1.contains("Time:"));
+        assert!(content1.contains("Timestamp(millis):"));
         assert!(content1.contains("response1"));
 
         let Content::Text(content2) = result_history[2].content.clone();
-        // should be like "Time: 1742525911 \nresponse2"
-        assert!(content2.contains("Time:"));
+        assert!(content2.contains("Timestamp(millis):"));
         assert!(content2.contains("response2"));
 
         let Content::Text(content3) = result_history[3].content.clone();
-        // should be like "Time: 1742525911 \nresponse3"
-        assert!(content3.contains("Time:"));
+        assert!(content3.contains("Timestamp(millis):"));
         assert!(content3.contains("response3"));
     }
 
@@ -330,17 +326,17 @@ mod tests {
             // Because agents are executed concurrently, the order of the responses is not guaranteed.
             assert!(result_history.iter().skip(1).any(|msg| {
                 let Content::Text(content) = msg.content.clone();
-                content.contains("Time:") && content.contains("response1")
+                content.contains("Timestamp(millis):") && content.contains("response1")
             }));
 
             assert!(result_history.iter().skip(1).any(|msg| {
                 let Content::Text(content) = msg.content.clone();
-                content.contains("Time:") && content.contains("response2")
+                content.contains("Timestamp(millis):") && content.contains("response2")
             }));
 
             assert!(result_history.iter().skip(1).any(|msg| {
                 let Content::Text(content) = msg.content.clone();
-                content.contains("Time:") && content.contains("response3")
+                content.contains("Timestamp(millis):") && content.contains("response3")
             }));
         }
     }
