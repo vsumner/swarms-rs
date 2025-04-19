@@ -18,7 +18,10 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use swarms_macro::tool;
 use thiserror::Error;
-use tokio::{process::Command, sync::mpsc};
+use tokio::{
+    process::Command,
+    sync::{Mutex, mpsc},
+};
 use twox_hash::XxHash3_64;
 
 use crate::{
@@ -288,26 +291,48 @@ where
                     }
                 }));
 
-                let mut results = Vec::new();
-                for tool_call in all_tool_calls {
-                    let tool = Arc::clone(
-                        self.tools_impl
-                            .get(&tool_call.name)
-                            .ok_or(AgentError::ToolNotFound(tool_call.name.clone()))?
-                            .deref(),
-                    );
-                    let args = tool_call.arguments.to_string();
-                    // execute tool
-                    let result_str = tool.call(args.clone()).await?;
-                    // collect results
-                    results.push(ToolCallOutput {
-                        name: tool_call.name.clone(),
-                        args,
-                        result: result_str,
-                    });
-                }
+                // Call tools concurrently
+                let results = Arc::new(Mutex::new(Vec::new()));
+                stream::iter(all_tool_calls)
+                    .for_each_concurrent(None, |tool_call| {
+                        let results = Arc::clone(&results);
+                        async move {
+                            let tool = Arc::clone(
+                                match self.tools_impl.get(&tool_call.name) {
+                                    Some(tool) => tool,
+                                    None => {
+                                        tracing::error!("Tool not found: {}", tool_call.name);
+                                        return;
+                                    },
+                                }
+                                .deref(),
+                            );
+                            let args = tool_call.arguments.to_string();
+                            // execute tool
+                            let result = match tool.call(args.clone()).await {
+                                Ok(result) => result,
+                                Err(e) => {
+                                    tracing::error!(
+                                        "Failed to call tool<{}>, args: {}, error: {}",
+                                        tool.name(),
+                                        args,
+                                        e
+                                    );
+                                    return;
+                                },
+                            };
+                            results.lock().await.push(ToolCallOutput {
+                                name: tool_call.name,
+                                args,
+                                result,
+                            });
+                        }
+                    })
+                    .await;
 
-                Ok(ChatResponse::ToolCalls(results))
+                Ok(ChatResponse::ToolCalls(
+                    Arc::clone(&results).lock().await.clone(),
+                ))
             },
         }
     }
@@ -483,7 +508,7 @@ where
                                     match serde_json::from_str::<TaskStatus>(&tool_call.result) {
                                         Ok(task_status) => {
                                             tracing::info!(
-                                                "Task complete tool called, task status: {:#?}",
+                                                "Task evaluator tool called, task status: {:#?}",
                                                 task_status,
                                             );
 
