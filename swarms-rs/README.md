@@ -37,7 +37,7 @@ Add `swarms-rs` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-swarms-rs = "0.1"
+swarms-rs = "*"
 # Or use the latest version from GitHub
 swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
 ```
