@@ -810,7 +810,7 @@ fn task_evaluator(status: TaskStatus) -> Result<TaskStatus, TaskEvaluatorError> 
 }
 
 /// Tracks task status and provides feedback for incomplete tasks.
-/// When `Incomplete``, the `context` becomes the system's next prompt.
+/// When `Incomplete`, the `context` becomes the system's next prompt.
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub enum TaskStatus {
     /// Indicates that the task is complete.
