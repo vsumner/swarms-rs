@@ -6,6 +6,105 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
+<div align="center">
+  <a href="https://swarms.ai">
+    <img src="https://github.com/kyegomez/swarms/blob/master/images/swarmslogobanner.png" style="margin: 15px; max-width: 300px" width="50%" alt="Logo">
+  </a>
+</div>
+<p align="center">
+  <em>The Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust </em>
+</p>
+
+<p align="center">
+    <a href="https://pypi.org/project/swarms/" target="_blank">
+        <img alt="Python" src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" />
+        <img alt="Version" src="https://img.shields.io/pypi/v/swarms?style=for-the-badge&color=3670A0">
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://twitter.com/swarms_corp/">🐦 Twitter</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://discord.gg/jM3Z6M9uMq">📢 Discord</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://swarms.ai">Swarms Website</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://docs.swarms.world">📙 Documentation</a>
+    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <a href="https://swarms.world"> Swarms Marketplace</a>
+</p>
+
+<p align="center">
+    <!-- Social Media -->
+    <a href="https://discord.gg/jHnrkH5y">
+        <img src="https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord">
+    </a>
+    <a href="https://www.youtube.com/@kyegomez3242">
+        <img src="https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube">
+    </a>
+    <a href="https://www.linkedin.com/in/kye-g-38759a207/">
+        <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+    </a>
+    <a href="https://x.com/kyegomezb">
+        <img src="https://img.shields.io/badge/X.com-Follow-1DA1F2?style=for-the-badge&logo=x&logoColor=white" alt="X.com">
+    </a>
+</p>
+
+<p align="center">
+    <!-- Project Stats -->
+    <a href="https://github.com/kyegomez/swarms/issues">
+        <img src="https://img.shields.io/github/issues/kyegomez/swarms" alt="GitHub issues">
+    </a>
+    <a href="https://github.com/kyegomez/swarms/network">
+        <img src="https://img.shields.io/github/forks/kyegomez/swarms" alt="GitHub forks">
+    </a>
+    <a href="https://github.com/kyegomez/swarms/stargazers">
+        <img src="https://img.shields.io/github/stars/kyegomez/swarms" alt="GitHub stars">
+    </a>
+    <a href="https://github.com/kyegomez/swarms/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/kyegomez/swarms" alt="GitHub license">
+    </a>
+    <a href="https://star-history.com/#kyegomez/swarms">
+        <img src="https://img.shields.io/github/stars/kyegomez/swarms?style=social" alt="GitHub star chart">
+    </a>
+    <a href="https://libraries.io/github/kyegomez/swarms">
+        <img src="https://img.shields.io/librariesio/github/kyegomez/swarms" alt="Dependency Status">
+    </a>
+    <a href="https://pepy.tech/project/swarms">
+        <img src="https://static.pepy.tech/badge/swarms/month" alt="Downloads">
+    </a>
+</p>
+
+<p align="center">
+    <!-- Share Buttons -->
+    <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
+        <img src="https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/swarms" alt="Share on Twitter">
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
+        <img src="https://img.shields.io/badge/Share-%20facebook-blue" alt="Share on Facebook">
+    </a>
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&title=&summary=&source=">
+        <img src="https://img.shields.io/badge/Share-%20linkedin-blue" alt="Share on LinkedIn">
+    </a>
+</p>
+
+<p align="center">
+    <!-- Additional Share Buttons -->
+    <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&title=Swarms%20-%20the%20future%20of%20AI">
+        <img src="https://img.shields.io/badge/-Share%20on%20Reddit-orange" alt="Share on Reddit">
+    </a>
+    <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&t=Swarms%20-%20the%20future%20of%20AI">
+        <img src="https://img.shields.io/badge/-Share%20on%20Hacker%20News-orange" alt="Share on Hacker News">
+    </a>
+    <a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Swarms%20-%20the%20future%20of%20AI">
+        <img src="https://img.shields.io/badge/-Share%20on%20Pinterest-red" alt="Share on Pinterest">
+    </a>
+    <a href="https://api.whatsapp.com/send?text=Check%20out%20Swarms%20-%20the%20future%20of%20AI%20%23swarms%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
+        <img src="https://img.shields.io/badge/-Share%20on%20WhatsApp-green" alt="Share on WhatsApp">
+    </a>
+</p>
+
+
 ## Overview
 
 `swarms-rs` is an enterprise-grade, production-ready multi-agent orchestration framework built in Rust, designed to handle the most demanding tasks with unparalleled speed and efficiency. Leveraging Rust's bleeding-edge performance and safety features, `swarms-rs` provides a powerful and scalable solution for orchestrating complex multi-agent systems across various industries.
