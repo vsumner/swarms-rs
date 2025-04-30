@@ -226,6 +226,12 @@ where
         self.config.task_evaluator_tool_enabled = false;
         self
     }
+
+    /// Some tools doesn't support concurrent call, so we need to disable it
+    pub fn disable_concurrent_tool_call(mut self) -> Self {
+        self.config.concurrent_tool_call_enabled = false;
+        self
+    }
 }
 
 #[derive(Clone, Serialize)]
@@ -293,42 +299,72 @@ where
 
                 // Call tools concurrently
                 let results = Arc::new(Mutex::new(Vec::new()));
-                stream::iter(all_tool_calls)
-                    .for_each_concurrent(None, |tool_call| {
-                        let results = Arc::clone(&results);
-                        async move {
-                            let tool = Arc::clone(
-                                match self.tools_impl.get(&tool_call.name) {
-                                    Some(tool) => tool,
-                                    None => {
-                                        tracing::error!("Tool not found: {}", tool_call.name);
+                if self.config.concurrent_tool_call_enabled {
+                    stream::iter(all_tool_calls)
+                        .for_each_concurrent(None, |tool_call| {
+                            let results = Arc::clone(&results);
+                            async move {
+                                let tool = Arc::clone(
+                                    match self.tools_impl.get(&tool_call.name) {
+                                        Some(tool) => tool,
+                                        None => {
+                                            tracing::error!("Tool not found: {}", tool_call.name);
+                                            results.lock().await.push(ToolCallOutput {
+                                                name: tool_call.name,
+                                                args: tool_call.arguments.to_string(),
+                                                result: "Tool not found".to_owned(),
+                                            });
+                                            return;
+                                        },
+                                    }
+                                    .deref(),
+                                );
+                                let args = tool_call.arguments.to_string();
+                                // execute tool
+                                let result = match tool.call(args.clone()).await {
+                                    Ok(result) => result,
+                                    Err(e) => {
+                                        tracing::error!(
+                                            "Failed to call tool<{}>, args: {}, error: {}",
+                                            tool.name(),
+                                            args,
+                                            e
+                                        );
+                                        results.lock().await.push(ToolCallOutput {
+                                            name: tool_call.name,
+                                            args,
+                                            result: e.to_string(),
+                                        });
                                         return;
                                     },
-                                }
+                                };
+                                results.lock().await.push(ToolCallOutput {
+                                    name: tool_call.name,
+                                    args,
+                                    result,
+                                });
+                            }
+                        })
+                        .await;
+                } else {
+                    for tool_call in all_tool_calls {
+                        let tool = Arc::clone(
+                            self.tools_impl
+                                .get(&tool_call.name)
+                                .ok_or(AgentError::ToolNotFound(tool_call.name.clone()))?
                                 .deref(),
-                            );
-                            let args = tool_call.arguments.to_string();
-                            // execute tool
-                            let result = match tool.call(args.clone()).await {
-                                Ok(result) => result,
-                                Err(e) => {
-                                    tracing::error!(
-                                        "Failed to call tool<{}>, args: {}, error: {}",
-                                        tool.name(),
-                                        args,
-                                        e
-                                    );
-                                    return;
-                                },
-                            };
-                            results.lock().await.push(ToolCallOutput {
-                                name: tool_call.name,
-                                args,
-                                result,
-                            });
-                        }
-                    })
-                    .await;
+                        );
+                        let args = tool_call.arguments.to_string();
+                        // execute tool
+                        let result_str = tool.call(args.clone()).await?;
+                        // collect results
+                        results.lock().await.push(ToolCallOutput {
+                            name: tool_call.name.clone(),
+                            args,
+                            result: result_str,
+                        });
+                    }
+                }
 
                 Ok(ChatResponse::ToolCalls(
                     Arc::clone(&results).lock().await.clone(),
@@ -512,23 +548,24 @@ where
                                                 task_status,
                                             );
 
-                                            task_complete = task_status.is_complete;
-                                            if !task_complete {
-                                                // If not complete, store the context for the next loop's prompt
-                                                last_response_text = task_status.context.unwrap_or_else(|| {
-                                                    tracing::warn!("Task evaluator returned incomplete status without context.");
-                                                    "Task incomplete, continue working.".to_string()
-                                                });
-                                                // Keep the raw tool result for memory
-                                                assistant_memory_content = formatted;
-                                            } else {
-                                                // Task is complete
-                                                // This may be a bit redundant, but it's here for clarity
-                                                // last_response_text = format!(
-                                                //     "Task marked as complete by task_evaluator. Result: {}",
-                                                //     tool_call.result
-                                                // );
-                                                assistant_memory_content = formatted; // Store the final tool call in memory
+                                            match task_status {
+                                                TaskStatus::Complete => {
+                                                    task_complete = true;
+                                                    // Task is complete
+                                                    // This may be a bit redundant, but it's here for clarity
+                                                    // last_response_text = format!(
+                                                    //     "Task marked as complete by task_evaluator. Result: {}",
+                                                    //     tool_call.result
+                                                    // );
+                                                    assistant_memory_content = formatted; // Store the final tool call in memory
+                                                },
+                                                TaskStatus::Incomplete { context } => {
+                                                    task_complete = false;
+                                                    // If not complete, store the context for the next loop's prompt
+                                                    last_response_text = context;
+                                                    // Keep the raw tool result for memory
+                                                    assistant_memory_content = formatted;
+                                                },
                                             }
                                         },
                                         Err(e) => {
@@ -760,33 +797,32 @@ pub struct ToolCallOutput {
     Finalize or request refinement for the current task.
     
     Call this when:
-    - All user requirements are fully satisfied (set is_complete=true)
+    - All user requirements are fully satisfied (set `Complete`)
     - Avoids unnecessary iterations, redundancy, or waste.
-    - Additional input/clarification is needed (set is_complete=false with context)
+    - Additional input/clarification is needed (set `Incomplete` with context)
     
-    When is_complete=true, the context is ignored, because the dialogue will terminate.
-    When is_complete=false, your context becomes the system's next prompt, enabling iterative task refinement.
+    When `Complete`, the context is ignored, because the dialogue will terminate.
+    When `Incomplete`, your context becomes the system's next prompt, enabling iterative task refinement.
     Provide clear, actionable contexts to guide the next steps, the context should be used to guide yourself to complete the task.
 "#)]
 fn task_evaluator(status: TaskStatus) -> Result<TaskStatus, TaskEvaluatorError> {
     Ok(status)
 }
 
-/// Tracks task completion state and provides feedback for incomplete tasks.
-/// When `is_complete` is false, the `context` becomes the system's next prompt.
+/// Tracks task status and provides feedback for incomplete tasks.
+/// When `Incomplete`, the `context` becomes the system's next prompt.
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub struct TaskStatus {
-    /// Final completion state.
-    /// Set to true ONLY when all requirements are fully satisfied.
-    pub is_complete: bool,
-
-    /// Required guidance when task is incomplete:
-    /// - Clear description of missing elements
-    /// - Specific questions needing clarification  
-    /// - Remaining steps to completion
-    ///
-    /// Optional when task is complete.
-    pub context: Option<String>,
+pub enum TaskStatus {
+    /// Indicates that the task is complete.
+    Complete,
+    /// Indicates that the task is incomplete.
+    Incomplete {
+        /// Required guidance when task is incomplete:
+        /// - Clear description of missing elements
+        /// - Specific questions needing clarification  
+        /// - Remaining steps to completion
+        context: String,
+    },
 }
 
 #[derive(Debug, Error)]

@@ -128,6 +128,7 @@ pub struct AgentConfig {
     pub save_state_dir: Option<String>,
     pub stop_words: HashSet<String>,
     pub task_evaluator_tool_enabled: bool,
+    pub concurrent_tool_call_enabled: bool,
 }
 
 impl AgentConfig {
@@ -156,6 +157,7 @@ impl Default for AgentConfig {
             save_state_dir: None,
             stop_words: HashSet::new(),
             task_evaluator_tool_enabled: true,
+            concurrent_tool_call_enabled: true,
         }
     }
 }
