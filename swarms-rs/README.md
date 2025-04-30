@@ -1,10 +1,4 @@
-# swarms-rs
 
-**The Enterprise-Grade, Production-Ready Multi-Agent Orchestration Framework in Rust**
-
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
 <div align="center">
   <a href="https://swarms.ai">
