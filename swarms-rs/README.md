@@ -1,19 +1,20 @@
-
-
 <div align="center">
   <a href="https://swarms.ai">
     <img src="https://github.com/kyegomez/swarms/blob/master/images/swarmslogobanner.png" style="margin: 15px; max-width: 300px" width="50%" alt="Logo">
   </a>
 </div>
+
 <p align="center">
-  <em>The Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust </em>
+  <em>The Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust</em>
 </p>
 
 <p align="center">
-    <a href="https://pypi.org/project/swarms/" target="_blank">
-        <img alt="Python" src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" />
-        <img alt="Version" src="https://img.shields.io/pypi/v/swarms?style=for-the-badge&color=3670A0">
-    </a>
+  <!-- Rust Crate Badges -->
+  <a href="https://crates.io/crates/swarms-rs" target="_blank">
+    <img alt="Crates.io" src="https://img.shields.io/crates/v/swarms-rs?style=for-the-badge&logo=rust&color=orange" />
+    <img alt="Downloads" src="https://img.shields.io/crates/d/swarms-rs?style=for-the-badge&color=orange" />
+    <img alt="Rust Docs" src="https://img.shields.io/badge/docs.rs-swarms--rs-blue?style=for-the-badge&logo=rust" />
+  </a>
 </p>
 
 <p align="center">
@@ -25,7 +26,7 @@
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
     <a href="https://docs.swarms.world">📙 Documentation</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://swarms.world"> Swarms Marketplace</a>
+    <a href="https://swarms.world">Swarms Marketplace</a>
 </p>
 
 <p align="center">
@@ -64,9 +65,6 @@
     <a href="https://libraries.io/github/kyegomez/swarms">
         <img src="https://img.shields.io/librariesio/github/kyegomez/swarms" alt="Dependency Status">
     </a>
-    <a href="https://pepy.tech/project/swarms">
-        <img src="https://static.pepy.tech/badge/swarms/month" alt="Downloads">
-    </a>
 </p>
 
 <p align="center">
@@ -97,7 +95,6 @@
         <img src="https://img.shields.io/badge/-Share%20on%20WhatsApp-green" alt="Share on WhatsApp">
     </a>
 </p>
-
 
 ## Overview
 
