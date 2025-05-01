@@ -1,15 +1,14 @@
 [package]
 name = "swarms-rs"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2024"
-description = "A Rust implementation of the Swarms framework for building multi-agent systems"
+description = "The Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust"
 authors = ["Kye Gomez <kye@kyegomez.com>"]
 license = "Apache-2.0"
 repository = "https://github.com/The-Swarm-Corporation/swarms-rs"
 documentation = "https://docs.rs/swarms-rs"
 readme = "README.md"
 keywords = ["ai", "agents", "swarms", "multi-agent", "llm"]
-# categories = ["ai", "concurrency"]
 
 [dependencies]
 # Standard utilities
