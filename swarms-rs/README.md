@@ -53,17 +53,14 @@
     <a href="https://github.com/kyegomez/swarms/network">
         <img src="https://img.shields.io/github/forks/kyegomez/swarms" alt="GitHub forks">
     </a>
-    <a href="https://github.com/kyegomez/swarms/stargazers">
-        <img src="https://img.shields.io/github/stars/kyegomez/swarms" alt="GitHub stars">
+    <a href="https://github.com/The-Swarm-Corporation/swarms-rs/stargazers">
+        <img src="https://github.com/The-Swarm-Corporation/swarms-rs" alt="GitHub stars">
     </a>
-    <a href="https://github.com/kyegomez/swarms/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/kyegomez/swarms" alt="GitHub license">
+    <a href="https://github.com/The-Swarm-Corporation/swarms-rs/blob/main/LICENSE">
+        <img src="https://github.com/The-Swarm-Corporation/swarms-rs" alt="GitHub license">
     </a>
     <a href="https://star-history.com/#kyegomez/swarms">
         <img src="https://img.shields.io/github/stars/kyegomez/swarms?style=social" alt="GitHub star chart">
-    </a>
-    <a href="https://libraries.io/github/kyegomez/swarms">
-        <img src="https://img.shields.io/librariesio/github/kyegomez/swarms" alt="Dependency Status">
     </a>
 </p>
 

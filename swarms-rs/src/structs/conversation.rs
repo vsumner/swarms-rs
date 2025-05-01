@@ -54,6 +54,7 @@ pub struct AgentConversation {
     agent_name: String,
     save_filepath: Option<PathBuf>,
     pub history: Vec<Message>,
+    max_messages: Option<usize>,
 }
 
 impl AgentConversation {
@@ -62,11 +63,30 @@ impl AgentConversation {
             agent_name,
             save_filepath: None,
             history: Vec::new(),
+            max_messages: Some(1_000_000), // Default maximum messages
+        }
+    }
+
+    /// Create a new AgentConversation with a custom maximum message limit
+    pub fn with_max_messages(agent_name: String, max_messages: Option<usize>) -> Self {
+        Self {
+            agent_name,
+            save_filepath: None,
+            history: Vec::new(),
+            max_messages,
         }
     }
 
     /// Add a message to the conversation history.
     pub fn add(&mut self, role: Role, message: String) {
+        // Only check message limit if it's set
+        if let Some(max) = self.max_messages {
+            if self.history.len() >= max {
+                // Remove oldest messages to make room for new ones
+                self.history.drain(0..(self.history.len() - max + 1));
+            }
+        }
+
         let timestamp = Local::now().timestamp_millis();
         let message = Message {
             role,
