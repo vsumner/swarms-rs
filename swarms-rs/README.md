@@ -125,8 +125,9 @@ Add `swarms-rs` to your `Cargo.toml`:
 ```toml
 [dependencies]
 swarms-rs = "*"
+
 # Or use the latest version from GitHub
-swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
+# swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
 ```
 
 ### Environment Setup
@@ -457,6 +458,10 @@ async fn main() -> Result<()> {
 ```
 
 
+-----------
+
+
+
 ## Run Examples
 
 In [swarms-rs/examples](swarms-rs/examples/) there is our sample code, which can provide a considerable degree of reference:
@@ -481,6 +486,9 @@ cargo run --example graph_workflow
 - **MCP Integration**: Support for Model Context Protocol tools via STDIO and SSE interfaces
 - **Swarm Orchestration**: Coordination of multiple agents for complex workflows
 - **Persistence Layer**: State management and recovery mechanisms
+
+---------
+
 
 ### Development Setup
 
@@ -508,6 +516,8 @@ cargo run --example graph_workflow
    ```bash
    cargo bench
    ```
+
+----------------
 
 ## License
 
