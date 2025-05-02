@@ -97,6 +97,12 @@
 
 `swarms-rs` is an enterprise-grade, production-ready multi-agent orchestration framework built in Rust, designed to handle the most demanding tasks with unparalleled speed and efficiency. Leveraging Rust's bleeding-edge performance and safety features, `swarms-rs` provides a powerful and scalable solution for orchestrating complex multi-agent systems across various industries.
 
+
+## 🌐 Available Languages
+
+- [English](README.md)
+- [中文](README.zh.md)
+
 ## Key Benefits
 
 | Feature                        | Description                                                                                                                                                                                                 |
