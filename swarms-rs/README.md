@@ -118,6 +118,9 @@
 - Cargo package manager
 - An API key for your LLM provider (OpenAI, DeepSeek, etc.)
 
+
+----------
+
 ### Installation
 
 Add `swarms-rs` to your `Cargo.toml`:
@@ -129,6 +132,8 @@ swarms-rs = "*"
 # Or use the latest version from GitHub
 # swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
 ```
+
+-------
 
 ### Environment Setup
 
@@ -190,6 +195,8 @@ graph TD
 This modular architecture allows for flexible deployment scenarios, from simple single-agent applications to complex, distributed multi-agent systems. Each layer is designed to be extensible, allowing developers to customize and enhance functionality while maintaining the core benefits of the framework's enterprise-grade reliability and performance.
 
 
+
+------------
 
 
 
@@ -261,6 +268,7 @@ async fn main() -> Result<()> {
 
 ```
 
+--------
 
 ### MCP Tool Support
 
