@@ -56,7 +56,7 @@ pub struct AggTradesResponse {
     pub l: i64,
 
     #[serde(rename = "T")]
-    /// Unix timestamp in milliseconds. 
+    /// Unix timestamp in milliseconds.
     pub T: i64,
     /// Is the buyer the market maker?
     pub m: bool,

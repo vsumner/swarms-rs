@@ -1,8 +1,8 @@
 use futures::future::BoxFuture;
 use rmcp::{
-    RoleClient,
     model::CallToolRequestParam,
     service::{DynService, RunningService},
+    RoleClient,
 };
 use serde::{Deserialize, Serialize};
 use std::{future::Future, ops::Deref, sync::Arc};

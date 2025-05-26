@@ -1,6 +1,6 @@
 use std::env;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use swarms_rs::{llm::provider::openai::OpenAI, structs::agent::Agent};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -16,9 +16,14 @@ async fn main() -> Result<()> {
         )
         .init();
 
-    let base_url = env::var("DEEPSEEK_BASE_URL").unwrap();
-    let api_key = env::var("DEEPSEEK_API_KEY").unwrap();
-    let client = OpenAI::from_url(base_url, api_key).set_model("deepseek-chat");
+    // Check for required environment variables
+    let api_key = env::var("OPENAI_API_KEY")
+        .context("OPENAI_API_KEY environment variable not set. Please set it in your .env file or environment.")?;
+
+    // Create OpenAI client with error handling
+    let client = OpenAI::new(api_key).set_model("gpt-4o-mini");
+
+    // Build agent with error handling
     let agent = client
         .agent_builder()
         .system_prompt("You are a helpful assistant.")
@@ -29,10 +34,13 @@ async fn main() -> Result<()> {
         .save_state_dir("./temp/")
         .enable_plan("Split the task into subtasks.".to_owned())
         .build();
+
+    // Run agent with error handling
     let response = agent
         .run("What is the meaning of life?".to_owned())
         .await
-        .unwrap();
+        .context("Failed to run agent")?;
+
     println!("{response}");
 
     Ok(())

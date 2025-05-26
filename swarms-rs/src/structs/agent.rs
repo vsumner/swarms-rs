@@ -2,7 +2,11 @@ use crate::structs::persistence;
 use crate::structs::tool::ToolError;
 use futures::future::BoxFuture;
 use serde::{Deserialize, Serialize};
+use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::collections::HashSet;
+use std::hash::{Hash, Hasher};
+use std::sync::Arc;
 use thiserror::Error;
 use tokio::sync::broadcast;
 
@@ -34,78 +38,81 @@ pub enum AgentError {
 
 #[derive(Clone)]
 pub struct AgentConfigBuilder {
-    config: AgentConfig,
+    config: Arc<AgentConfig>,
 }
 
 impl AgentConfigBuilder {
     pub fn agent_name(mut self, name: impl Into<String>) -> Self {
-        self.config.name = name.into();
+        Arc::make_mut(&mut self.config).name = name.into();
         self
     }
 
     pub fn user_name(mut self, name: impl Into<String>) -> Self {
-        self.config.user_name = name.into();
+        Arc::make_mut(&mut self.config).user_name = name.into();
         self
     }
 
     pub fn description(mut self, description: impl Into<String>) -> Self {
-        self.config.description = Some(description.into());
+        Arc::make_mut(&mut self.config).description = Some(description.into());
         self
     }
 
     pub fn temperature(mut self, temperature: f64) -> Self {
-        self.config.temperature = temperature;
+        Arc::make_mut(&mut self.config).temperature = temperature;
         self
     }
 
     pub fn max_loops(mut self, max_loops: u32) -> Self {
-        self.config.max_loops = max_loops;
+        Arc::make_mut(&mut self.config).max_loops = max_loops;
         self
     }
 
     pub fn max_tokens(mut self, max_tokens: u64) -> Self {
-        self.config.max_tokens = max_tokens;
+        Arc::make_mut(&mut self.config).max_tokens = max_tokens;
         self
     }
 
     pub fn enable_plan(mut self, planning_prompt: impl Into<Option<String>>) -> Self {
-        self.config.plan_enabled = true;
-        self.config.planning_prompt = planning_prompt.into();
+        let config = Arc::make_mut(&mut self.config);
+        config.plan_enabled = true;
+        config.planning_prompt = planning_prompt.into();
         self
     }
 
     pub fn enable_autosave(mut self) -> Self {
-        self.config.autosave = true;
+        Arc::make_mut(&mut self.config).autosave = true;
         self
     }
 
     pub fn retry_attempts(mut self, retry_attempts: u32) -> Self {
-        self.config.retry_attempts = retry_attempts;
+        Arc::make_mut(&mut self.config).retry_attempts = retry_attempts;
         self
     }
 
     pub fn enable_rag_every_loop(mut self) -> Self {
-        self.config.rag_every_loop = true;
+        Arc::make_mut(&mut self.config).rag_every_loop = true;
         self
     }
 
     pub fn save_sate_path(mut self, path: impl Into<String>) -> Self {
-        self.config.save_state_dir = Some(path.into());
+        Arc::make_mut(&mut self.config).save_state_dir = Some(path.into());
         self
     }
 
     pub fn add_stop_word(mut self, stop_word: impl Into<String>) -> Self {
-        self.config.stop_words.insert(stop_word.into());
+        Arc::make_mut(&mut self.config)
+            .stop_words
+            .insert(stop_word.into());
         self
     }
 
-    pub fn stop_words(self, stop_words: Vec<String>) -> Self {
-        stop_words
-            .into_iter()
-            .fold(self, |builder, stop_word| builder.add_stop_word(stop_word))
+    pub fn stop_words(mut self, stop_words: Vec<String>) -> Self {
+        let config = Arc::make_mut(&mut self.config);
+        config.stop_words = stop_words.into_iter().collect();
+        self
     }
 
-    pub fn build(self) -> AgentConfig {
+    pub fn build(self) -> Arc<AgentConfig> {
         self.config
     }
 }
@@ -126,16 +133,59 @@ pub struct AgentConfig {
     pub retry_attempts: u32,
     pub rag_every_loop: bool,
     pub save_state_dir: Option<String>,
+    #[serde(with = "hashset_serde")]
     pub stop_words: HashSet<String>,
     pub task_evaluator_tool_enabled: bool,
     pub concurrent_tool_call_enabled: bool,
+    #[serde(skip)]
+    pub response_cache: HashMap<String, String>,
+}
+
+// Helper module for HashSet serialization
+mod hashset_serde {
+    use super::*;
+    use serde::{Deserializer, Serializer};
+    use std::collections::HashSet;
+
+    pub fn serialize<S>(set: &HashSet<String>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let vec: Vec<_> = set.iter().collect();
+        vec.serialize(serializer)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<HashSet<String>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let vec: Vec<String> = Vec::deserialize(deserializer)?;
+        Ok(vec.into_iter().collect())
+    }
 }
 
 impl AgentConfig {
     pub fn builder() -> AgentConfigBuilder {
         AgentConfigBuilder {
-            config: AgentConfig::default(),
+            config: Arc::new(AgentConfig::default()),
         }
+    }
+
+    // Add a method to compute a hash for caching
+    pub fn compute_hash(&self, input: &str) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        input.hash(&mut hasher);
+        hasher.finish()
+    }
+
+    // Add a method to check cache
+    pub fn get_cached_response(&self, input: &str) -> Option<&String> {
+        self.response_cache.get(input)
+    }
+
+    // Add a method to cache response
+    pub fn cache_response(&mut self, input: String, response: String) {
+        self.response_cache.insert(input, response);
     }
 }
 
@@ -155,9 +205,10 @@ impl Default for AgentConfig {
             retry_attempts: 3,
             rag_every_loop: false,
             save_state_dir: None,
-            stop_words: HashSet::new(),
+            stop_words: HashSet::with_capacity(16), // Pre-allocate capacity
             task_evaluator_tool_enabled: true,
             concurrent_tool_call_enabled: true,
+            response_cache: HashMap::with_capacity(100), // Pre-allocate cache capacity
         }
     }
 }

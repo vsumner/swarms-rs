@@ -5,7 +5,7 @@ use std::{
 
 use chrono::Local;
 use dashmap::{DashMap, DashSet};
-use futures::{StreamExt, future::BoxFuture, stream};
+use futures::{future::BoxFuture, stream, StreamExt};
 use thiserror::Error;
 use tokio::sync::mpsc;
 use twox_hash::XxHash3_64;

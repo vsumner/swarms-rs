@@ -538,6 +538,8 @@ cargo run --example graph_workflow
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+--------
+
 ## Contact
 
 For questions, suggestions, or feedback, please open an issue or contact us at [kye@swarms.world](mailto:kye@swarms.world).

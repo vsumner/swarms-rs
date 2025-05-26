@@ -1,7 +1,6 @@
 use std::{cmp::Ordering, env};
 
 use async_openai::{
-    Client,
     config::OpenAIConfig,
     types::{
         ChatCompletionMessageToolCall, ChatCompletionRequestAssistantMessageArgs,
@@ -15,14 +14,16 @@ use async_openai::{
         ChatCompletionToolType, CreateChatCompletionRequestArgs, FunctionCall, FunctionObjectArgs,
         ImageUrl, InputAudio, InputAudioFormat,
     },
+    Client,
 };
 use futures::future::BoxFuture;
 
 use crate::{
     agent::SwarmsAgentBuilder, // Updated import path - now from crate::agent instead of crate::structs::agent
     llm::{
-        self, CompletionError, Model,
+        self,
         request::{CompletionRequest, CompletionResponse},
+        CompletionError, Model,
     },
 };
 
@@ -277,13 +278,11 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                             _ => unimplemented!("Unsupported content type"),
                         })
                         .collect::<Result<Vec<ChatCompletionRequestUserMessageContentPart>, _>>()?;
-                        Ok(vec![
-                            ChatCompletionRequestUserMessageArgs::default()
-                                .content(content_array)
-                                .build()
-                                .unwrap() // Safety: All required fields are set
-                                .into(),
-                        ])
+                        Ok(vec![ChatCompletionRequestUserMessageArgs::default()
+                            .content(content_array)
+                            .build()
+                            .unwrap() // Safety: All required fields are set
+                            .into()])
                     },
                     Ordering::Equal => {
                         let content = match &other_content[0] {
@@ -295,10 +294,9 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                     .into()
                             },
                             llm::completion::UserContent::Image(image) => {
-                                let content_part = vec![
-                                    ChatCompletionRequestMessageContentPartImage::from(image)
-                                        .into(),
-                                ];
+                                let content_part =
+                                    vec![ChatCompletionRequestMessageContentPartImage::from(image)
+                                        .into()];
 
                                 ChatCompletionRequestUserMessageArgs::default()
                                     .content(content_part)
@@ -316,12 +314,11 @@ impl TryFrom<llm::completion::Message> for Vec<ChatCompletionRequestMessage> {
                                 {
                                     return Err(CompletionError::Request("Only support wav and mp3 for now, and must be base64 encoded".into()));
                                 }
-                                let content_part = vec![
-                                    ChatCompletionRequestMessageContentPartAudio::from(
+                                let content_part =
+                                    vec![ChatCompletionRequestMessageContentPartAudio::from(
                                         audio.clone(),
                                     )
-                                    .into(),
-                                ];
+                                    .into()];
                                 ChatCompletionRequestUserMessageArgs::default()
                                     .content(content_part)
                                     .build()

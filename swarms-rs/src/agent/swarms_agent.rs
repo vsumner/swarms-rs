@@ -7,12 +7,12 @@ use std::{
 };
 
 use dashmap::DashMap;
-use futures::{StreamExt, future::BoxFuture, stream};
+use futures::{future::BoxFuture, stream, StreamExt};
 use reqwest::IntoUrl;
 use rmcp::{
-    ServiceExt,
     model::{ClientCapabilities, ClientInfo, Implementation},
     transport::{SseTransport, TokioChildProcess},
+    ServiceExt,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -20,7 +20,7 @@ use swarms_macro::tool;
 use thiserror::Error;
 use tokio::{
     process::Command,
-    sync::{Mutex, mpsc},
+    sync::{mpsc, Mutex},
 };
 use twox_hash::XxHash3_64;
 
@@ -557,7 +557,8 @@ where
                                                     //     "Task marked as complete by task_evaluator. Result: {}",
                                                     //     tool_call.result
                                                     // );
-                                                    assistant_memory_content = formatted; // Store the final tool call in memory
+                                                    assistant_memory_content = formatted;
+                                                    // Store the final tool call in memory
                                                 },
                                                 TaskStatus::Incomplete { context } => {
                                                     task_complete = false;
@@ -581,7 +582,8 @@ where
                                                 "Error parsing task_evaluator result. Raw output: {}",
                                                 tool_call.result
                                             );
-                                            assistant_memory_content = formatted; // Store the problematic call
+                                            assistant_memory_content = formatted;
+                                            // Store the problematic call
                                         },
                                     }
                                 } else {
