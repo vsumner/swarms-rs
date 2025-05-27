@@ -2,7 +2,7 @@ use swarms_rs::{
     agent::SwarmsAgentBuilder,
     llm::provider::openai::OpenAI,
     structs::{
-        agent::{Agent, AgentConfig},
+        agent::AgentConfig,
         execute_agent_batch::{AgentBatchExecutor, BatchConfigBuilder},
     },
 };
