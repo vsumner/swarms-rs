@@ -11,7 +11,6 @@ readme = "README.md"
 keywords = ["ai", "agents", "swarms", "multi-agent", "llm"]
 
 [dependencies]
-# Standard utilities
 chrono = { version = "0.4", features = ["serde"] }
 dashmap = { version = "6", features = ["serde"] }
 schemars = { version = "0.8", features = ["derive"] }
@@ -21,39 +20,23 @@ erased-serde = "0.4"
 futures = "0.3"
 uuid = { version = "1.15", features = ["v4", "serde"] }
 url = "2.5"
-
-# HTTP client
-hyper = { version = "1.1", features = ["full"] }
-hyper-rustls = { version = "0.25", features = ["native-tokio"] }
 tokio-rustls = "0.26.2"
-
-# Asynchronous programming
 tokio = { version = "1", features = ["full"] }
-
-# Error handling and logging
 thiserror = "2"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-
-# Data processing
 twox-hash = "2.1"
 zstd = "0.13.3"
 petgraph = { version = "0.7", default-features = false, features = [
     "stable_graph",
 ] }
-
-# System interaction
 reqwest = { version = "0.12", features = [
     "json",
     "stream",
     "multipart",
     "rustls-tls-native-roots",
 ], default-features = false }
-
-# LLM provider
 async-openai = { version = "0.28", features = ["byot"] }
-
-# MCP
 rmcp = { version = "0.1.5", features = [
     "client",
     "transport-sse",
