@@ -576,6 +576,49 @@ cargo run --example graph_workflow
 
 ----------------
 
+
+## Community
+
+Join our growing community around the world for real-time support, ideas, and discussions on Swarms 😊
+
+### Connect With Us
+
+| Platform | Link | Description |
+|----------|------|-------------|
+| 📚 Documentation | [docs.swarms.world](https://docs.swarms.world) | Official documentation and guides |
+| 📝 Blog | [Medium](https://medium.com/@kyeg) | Latest updates and technical articles |
+| 💬 Discord | [Join Discord](https://discord.gg/jM3Z6M9uMq) | Live chat and community support |
+| 🐦 Twitter | [@kyegomez](https://twitter.com/kyegomez) | Latest news and announcements |
+| 👥 LinkedIn | [The Swarm Corporation](https://www.linkedin.com/company/the-swarm-corporation) | Professional network and updates |
+| 📺 YouTube | [Swarms Channel](https://www.youtube.com/channel/UC9yXyitkbU_WSy7bd_41SqQ) | Tutorials and demos |
+| 🎫 Events | [Sign up here](https://lu.ma/5p2jnc2v) | Join our community events |
+
+### Contributing
+
+We welcome contributions from the community! Whether you're fixing bugs, improving documentation, or adding new features, your help is valuable. Here's how you can contribute:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+For more details, please read our [Contributing Guidelines](CONTRIBUTING.md).
+
+### Join Our Discord
+
+Join our [Discord community](https://discord.gg/jM3Z6M9uMq) to:
+
+- Get real-time support
+- Share your ideas and feedback
+- Connect with other developers
+- Stay updated on the latest features
+- Participate in community events
+
+We're excited to have you join our growing community! 🌟
+
+-----
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
