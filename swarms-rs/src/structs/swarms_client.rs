@@ -20,9 +20,10 @@
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     // Initialize the client
+//!     // Initialize the client with API key from environment
 //!     let client = SwarmsClient::builder()
-//!         .api_key("your-api-key")
+//!         .unwrap()
+//!         .from_env()?  // Loads API key from SWARMS_API_KEY environment variable or .env file
 //!         .timeout(std::time::Duration::from_secs(60))
 //!         .max_retries(3)
 //!         .build()?;
@@ -591,6 +592,19 @@ impl ClientBuilder {
         Self::default()
     }
 
+    /// Load API key from environment variables and .env file
+    pub fn from_env() -> Result<Self> {
+        // Load .env file if it exists
+        dotenv::dotenv().ok();
+
+        // Try to get API key from environment
+        let api_key = std::env::var("SWARMS_API_KEY").map_err(|_| SwarmsError::InvalidConfig {
+            message: "SWARMS_API_KEY not found in environment or .env file".to_string(),
+        })?;
+
+        Ok(Self::new().api_key(api_key))
+    }
+
     /// Set the API key
     pub fn api_key<S: Into<String>>(mut self, api_key: S) -> Self {
         self.config.api_key = api_key.into();
@@ -1088,9 +1102,8 @@ impl<'a> SwarmCompletionBuilder<'a> {
     }
 
     /// Set the swarm type
-    pub fn swarm_type<S: Into<String>>(mut self, swarm_type: S) -> Self {
-        // Parse string to SwarmType - for simplicity, using Auto for now
-        self.request.swarm_type = Some(SwarmType::Auto);
+    pub fn swarm_type(mut self, swarm_type: SwarmType) -> Self {
+        self.request.swarm_type = Some(swarm_type);
         self
     }
 
@@ -1327,23 +1340,3 @@ mod tests {
         assert_eq!(spec.max_tokens, 1000);
     }
 }
-
-// ================================================================================================
-// CARGO.TOML DEPENDENCIES
-// ================================================================================================
-
-/*
-[dependencies]
-tokio = { version = "1.0", features = ["full"] }
-reqwest = { version = "0.11", features = ["json", "timeout"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-thiserror = "1.0"
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-dashmap = "5.0"
-url = "2.0"
-
-[dev-dependencies]
-tokio-test = "0.4"
-*/

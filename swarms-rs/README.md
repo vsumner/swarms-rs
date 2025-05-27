@@ -175,13 +175,6 @@ There are several ways to install and use `swarms-rs`:
    swarms-rs = "0.1.7"  # Replace with desired version
    ```
 
-After installation, you can verify it by running:
-
-```bash
-cargo doc --open  # View documentation
-cargo test       # Run tests
-```
-
 -------
 
 ### Environment Setup
