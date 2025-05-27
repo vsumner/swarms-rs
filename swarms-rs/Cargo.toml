@@ -26,7 +26,7 @@ url = "2.5"
 # HTTP client
 hyper = { version = "1.1", features = ["full"] }
 hyper-rustls = { version = "0.25", features = ["native-tokio"] }
-tokio-rustls = "*"
+tokio-rustls = "0.26.2"
 
 # Asynchronous programming
 tokio = { version = "1", features = ["full"] }
