@@ -1,7 +1,13 @@
 [package]
 name = "swarms-macro"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
+description = "Procedural macros for the swarms-rs framework"
+license = "Apache-2.0"
+repository = "https://github.com/The-Swarm-Corporation/swarms-rs"
+documentation = "https://docs.rs/swarms-macro"
+readme = "README.md"
+keywords = ["ai", "agents", "swarms", "macro", "proc-macro"]
 
 [lib]
 proc-macro = true
@@ -10,3 +16,4 @@ proc-macro = true
 quote = "1.0"
 syn = { version = "2.0", features = ["full"] }
 proc-macro2 = "1.0"
+schemars = { version = "0.8", features = ["derive"] }

@@ -1,15 +1,15 @@
 use std::{
-    collections::{hash_map, HashMap},
+    collections::{HashMap, hash_map},
     sync::Arc,
     time::Duration,
 };
 
 use dashmap::DashMap;
 use petgraph::{
+    Direction,
     graph::{EdgeIndex, NodeIndex},
     prelude::StableGraph,
     visit::EdgeRef,
-    Direction,
 };
 use thiserror::Error;
 use tokio::sync::Mutex;
@@ -579,7 +579,7 @@ pub enum GraphWorkflowError {
 mod tests {
     use futures::future;
 
-    use crate::structs::test_utils::{create_failing_agent, create_mock_agent, MockAgent};
+    use crate::structs::test_utils::{MockAgent, create_failing_agent, create_mock_agent};
 
     use super::*;
 

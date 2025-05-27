@@ -385,7 +385,7 @@ pub fn tool_impl(attr: TokenStream, item: TokenStream) -> TokenStream {
                 swarms_rs::llm::request::ToolDefinition {
                     name: Self::NAME.to_string(),
                     description: #description,
-                    parameters: schemars::schema_for!(#args_struct_name).as_value().to_owned(),
+                    parameters: serde_json::to_value(schemars::schema_for!(#args_struct_name)).unwrap(),
                 }
             }
         }

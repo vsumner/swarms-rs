@@ -1,4 +1,4 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use futures::future::{self, BoxFuture};
 use std::sync::Arc;
 use tokio::runtime::Runtime;

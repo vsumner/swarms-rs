@@ -7,12 +7,12 @@ use std::{
 };
 
 use dashmap::DashMap;
-use futures::{future::BoxFuture, stream, StreamExt};
+use futures::{StreamExt, future::BoxFuture, stream};
 use reqwest::IntoUrl;
 use rmcp::{
+    ServiceExt,
     model::{ClientCapabilities, ClientInfo, Implementation},
     transport::{SseTransport, TokioChildProcess},
-    ServiceExt,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -20,7 +20,7 @@ use swarms_macro::tool;
 use thiserror::Error;
 use tokio::{
     process::Command,
-    sync::{mpsc, Mutex},
+    sync::{Mutex, mpsc},
 };
 use twox_hash::XxHash3_64;
 

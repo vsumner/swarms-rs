@@ -4,3 +4,4 @@ pub mod agent;
 pub mod llm;
 pub mod structs;
 pub use swarms_macro;
+pub mod prompts;
