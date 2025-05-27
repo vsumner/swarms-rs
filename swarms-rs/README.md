@@ -130,14 +130,56 @@
 
 ### Installation
 
-Add `swarms-rs` to your `Cargo.toml`:
+There are several ways to install and use `swarms-rs`:
 
-```toml
-[dependencies]
-swarms-rs = "*"
+1. **Using Cargo (Recommended)**
+   Add `swarms-rs` to your `Cargo.toml`:
 
-# Or use the latest version from GitHub
-# swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
+   ```toml
+   [dependencies]
+   swarms-rs = "0.1.7"
+
+   # Or use the latest version from GitHub
+   # swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
+   ```
+
+2. **Install as a Binary**
+   Install `swarms-rs` globally using cargo:
+
+   ```bash
+   cargo install swarms-rs
+   ```
+
+3. **From Source**
+   Clone and build from source:
+
+   ```bash
+   git clone https://github.com/The-Swarm-Corporation/swarms-rs
+   cd swarms-rs
+   cargo build --release
+   ```
+
+4. **Using Git Dependencies**
+   Add directly from GitHub in your `Cargo.toml`:
+
+   ```toml
+   [dependencies]
+   swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs" }
+   ```
+
+5. **Using Specific Version**
+   Install a specific version:
+
+   ```toml
+   [dependencies]
+   swarms-rs = "0.1.7"  # Replace with desired version
+   ```
+
+After installation, you can verify it by running:
+
+```bash
+cargo doc --open  # View documentation
+cargo test       # Run tests
 ```
 
 -------
