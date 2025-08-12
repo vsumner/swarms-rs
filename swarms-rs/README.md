@@ -486,6 +486,8 @@ graph TD
     D --> D3[Swarm Intelligence]
 ```
 
+# Features
+
 | **Agents (LLM + Tools + Memory)** |                                                                                                 |
 |-----------------------------------|-------------------------------------------------------------------------------------------------|
 | **Language Models**               | Integration with various LLM providers (OpenAI, DeepSeek, etc.)                                 |
