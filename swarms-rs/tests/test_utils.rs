@@ -1,10 +1,12 @@
+#[cfg(test)]
 use futures::future::{self, BoxFuture};
+#[cfg(test)]
 use mockall::mock;
 
-use crate::structs::agent::AgentError;
+#[cfg(test)]
+use swarms_rs::structs::agent::{Agent, AgentError};
 
-use super::agent::Agent;
-
+#[cfg(test)]
 mock! {
     /// Mock Agent
     pub Agent{}
@@ -43,6 +45,7 @@ mock! {
     }
 }
 
+#[cfg(test)]
 pub fn create_mock_agent(id: &str, name: &str, desc: &str, response: &str) -> Box<MockAgent> {
     let mut agent = Box::new(MockAgent::new());
 
@@ -85,6 +88,7 @@ pub fn create_mock_agent(id: &str, name: &str, desc: &str, response: &str) -> Bo
     agent
 }
 
+#[cfg(test)]
 pub fn create_failing_agent(id: &str, name: &str, error_msg: &str) -> Box<MockAgent> {
     let mut agent = Box::new(MockAgent::new());
 
@@ -101,14 +105,14 @@ pub fn create_failing_agent(id: &str, name: &str, error_msg: &str) -> Box<MockAg
     let error_str = error_msg.to_string();
     let error_str_for_run = error_str.clone();
     agent.expect_run().returning(move |_| {
-        let err = AgentError::TestError(error_str_for_run.clone());
+        let err = AgentError::ToolNotFound(error_str_for_run.clone());
         Box::pin(future::ready(Err(err)))
     });
 
     agent.expect_is_response_complete().returning(|_| false);
 
     agent.expect_run_multiple_tasks().returning(move |_| {
-        let err = AgentError::TestError(error_str.clone());
+        let err = AgentError::ToolNotFound(error_str.clone());
         Box::pin(future::ready(Err(err)))
     });
 
