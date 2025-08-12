@@ -64,34 +64,6 @@
     </a>
 </p>
 
-<p align="center">
-    <!-- Share Buttons -->
-    <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
-        <img src="https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/swarms" alt="Share on Twitter">
-    </a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
-        <img src="https://img.shields.io/badge/Share-%20facebook-blue" alt="Share on Facebook">
-    </a>
-    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&title=&summary=&source=">
-        <img src="https://img.shields.io/badge/Share-%20linkedin-blue" alt="Share on LinkedIn">
-    </a>
-</p>
-
-<p align="center">
-    <!-- Additional Share Buttons -->
-    <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&title=Swarms%20-%20the%20future%20of%20AI">
-        <img src="https://img.shields.io/badge/-Share%20on%20Reddit-orange" alt="Share on Reddit">
-    </a>
-    <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&t=Swarms%20-%20the%20future%20of%20AI">
-        <img src="https://img.shields.io/badge/-Share%20on%20Hacker%20News-orange" alt="Share on Hacker News">
-    </a>
-    <a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Swarms%20-%20the%20future%20of%20AI">
-        <img src="https://img.shields.io/badge/-Share%20on%20Pinterest-red" alt="Share on Pinterest">
-    </a>
-    <a href="https://api.whatsapp.com/send?text=Check%20out%20Swarms%20-%20the%20future%20of%20AI%20%23swarms%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2Fswarms">
-        <img src="https://img.shields.io/badge/-Share%20on%20WhatsApp-green" alt="Share on WhatsApp">
-    </a>
-</p>
 
 ## Overview
 
