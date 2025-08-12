@@ -1,0 +1,51 @@
+[default]
+extend-ignore-identifiers-re = [
+    # Common technical terms that might be flagged as typos
+    "Swarms?",
+    "Tokio",
+    "async",
+    "await",
+    "impl",
+    "struct",
+    "enum",
+    "fn",
+    "mut",
+    "Vec",
+    "HashMap",
+    "BTreeMap",
+    "serde",
+    "uuid",
+    "openai",
+    "llm",
+    "api",
+    "json",
+    "http",
+    "url",
+    "rustls",
+    "reqwest",
+    "tracing",
+    "chrono",
+    "dashmap",
+    "erased",
+    "thiserror",
+    "twox",
+    "zstd",
+    "petgraph",
+    "rmcp",
+    "clippy",
+    "rustfmt",
+    "miri",
+]
+
+[default.extend-words]
+# Custom dictionary for domain-specific terms
+LLMs = "LLMs"
+APIs = "APIs"
+
+[files]
+extend-exclude = [
+    "target/",
+    "*.lock",
+    "*.log",
+    "CHANGELOG.md",
+]

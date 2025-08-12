@@ -1,0 +1,134 @@
+name: Feature Request
+description: Suggest an idea for swarms-rs
+title: "[FEATURE] "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! 🚀
+        
+        Please search existing issues before creating a new one to avoid duplicates.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Please describe the problem you're trying to solve.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented.
+      placeholder: I would like to see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered.
+      placeholder: I also considered...
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component of swarms-rs would this feature affect?
+      options:
+        - Core Library
+        - Agent Framework
+        - Workflow Engine
+        - LLM Integrations
+        - Tools/Macros
+        - Documentation
+        - Examples
+        - CLI/Tooling
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would be helpful
+        - High - Important for my use case
+        - Critical - Blocking my adoption
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe your specific use case and how this feature would help.
+      placeholder: |
+        In my application, I need to...
+        This feature would allow me to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-design
+    attributes:
+      label: Proposed API Design
+      description: If you have ideas about the API design, please share them here.
+      render: rust
+      placeholder: |
+        // Example API design
+        let agent = Agent::new()
+            .with_new_feature(...)
+            .build();
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Notes
+      description: Any thoughts on how this could be implemented?
+      placeholder: |
+        This could be implemented by...
+        Key considerations might include...
+
+  - type: checkboxes
+    id: breaking
+    attributes:
+      label: Breaking Changes
+      description: Would this feature require breaking changes?
+      options:
+        - label: This feature would require breaking changes to the public API
+        - label: This feature could be implemented without breaking changes
+        - label: I'm not sure about the impact on breaking changes
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request here.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you interested in contributing to this feature?
+      options:
+        - label: I'm willing to contribute to the implementation of this feature
+        - label: I'd like to help with testing and feedback
+        - label: I can help with documentation
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

@@ -1,0 +1,55 @@
+<style>
+/* Custom documentation styling */
+:root {
+    --swarms-primary: #007acc;
+    --swarms-secondary: #2d3748;
+    --swarms-accent: #4a90e2;
+    --swarms-bg: #f7fafc;
+}
+
+.rustdoc-toggle {
+    color: var(--swarms-primary) !important;
+}
+
+.sidebar .location {
+    background: var(--swarms-primary);
+    color: white;
+    font-weight: bold;
+}
+
+.nav-main {
+    background: var(--swarms-secondary);
+}
+
+.search-input {
+    border-color: var(--swarms-primary);
+}
+
+.search-input:focus {
+    border-color: var(--swarms-accent);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+h1.fqn {
+    color: var(--swarms-secondary);
+}
+
+.docblock h1, .docblock h2, .docblock h3 {
+    color: var(--swarms-primary);
+}
+
+/* Custom header */
+.rustdoc .sidebar .sidebar-logo {
+    margin-bottom: 1rem;
+}
+
+.rustdoc .sidebar .sidebar-logo::after {
+    content: "🦀 Swarms-RS";
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--swarms-primary);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+</style>

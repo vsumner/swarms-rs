@@ -1,0 +1,81 @@
+version: 2
+updates:
+  # Enable version updates for Cargo
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "The-Swarm-Corporation/maintainers"
+    assignees:
+      - "The-Swarm-Corporation/maintainers"
+    labels:
+      - "dependencies"
+      - "rust"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Enable version updates for swarms-rs package
+  - package-ecosystem: "cargo"
+    directory: "/swarms-rs"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "The-Swarm-Corporation/maintainers"
+    labels:
+      - "dependencies"
+      - "rust"
+      - "swarms-rs"
+
+  # Enable version updates for swarms-macro package
+  - package-ecosystem: "cargo"
+    directory: "/swarms-macro"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "The-Swarm-Corporation/maintainers"
+    labels:
+      - "dependencies"
+      - "rust"
+      - "swarms-macro"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "The-Swarm-Corporation/maintainers"
+    labels:
+      - "github-actions"
+      - "ci-cd"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "The-Swarm-Corporation/maintainers"
+    labels:
+      - "docker"
+      - "dependencies"

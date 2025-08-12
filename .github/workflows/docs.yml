@@ -1,0 +1,238 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Rebuild docs daily at 4 AM UTC
+    - cron: '0 4 * * *'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-docs-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build documentation
+      run: |
+        RUSTDOCFLAGS="--cfg docsrs --html-in-header docs/header.html" \
+        cargo doc --workspace --all-features --no-deps
+
+    - name: Generate index.html
+      run: |
+        cat > target/doc/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Swarms-RS Documentation</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+                .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                h1 { color: #333; border-bottom: 2px solid #007acc; padding-bottom: 10px; }
+                .crate-list { list-style: none; padding: 0; }
+                .crate-item { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #007acc; }
+                .crate-item h3 { margin: 0 0 10px 0; color: #007acc; }
+                .crate-item p { margin: 5px 0; color: #666; }
+                a { color: #007acc; text-decoration: none; }
+                a:hover { text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🦀 Swarms-RS Documentation</h1>
+                <p>Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust</p>
+                
+                <ul class="crate-list">
+                    <li class="crate-item">
+                        <h3><a href="swarms_rs/index.html">swarms-rs</a></h3>
+                        <p>Core library providing multi-agent orchestration, workflow management, and LLM integrations.</p>
+                    </li>
+                    <li class="crate-item">
+                        <h3><a href="swarms_macro/index.html">swarms-macro</a></h3>
+                        <p>Procedural macros for simplifying agent and tool development.</p>
+                    </li>
+                </ul>
+                
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="https://github.com/The-Swarm-Corporation/swarms-rs">GitHub Repository</a></li>
+                    <li><a href="https://crates.io/crates/swarms-rs">Crates.io</a></li>
+                    <li><a href="swarms_rs/index.html#examples">Examples</a></li>
+                </ul>
+            </div>
+        </body>
+        </html>
+        EOF
+
+    - name: Upload documentation artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: target/doc/
+        retention-days: 30
+
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download documentation artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: documentation
+        path: target/doc/
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: target/doc/
+        cname: docs.swarms-rs.com  # Optional: if you have a custom domain
+
+  check-links:
+    name: Check Documentation Links
+    runs-on: ubuntu-latest
+    needs: build-docs
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download documentation artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: documentation
+        path: target/doc/
+
+    - name: Install lychee
+      uses: taiki-e/install-action@lychee
+
+    - name: Check links in documentation
+      run: |
+        lychee --verbose --no-progress 'target/doc/**/*.html' || true
+
+  doc-coverage:
+    name: Documentation Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust nightly
+      uses: dtolnay/rust-toolchain@nightly
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-doc-coverage-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install cargo-doc-coverage
+      run: cargo install cargo-doc-coverage
+
+    - name: Check documentation coverage
+      run: |
+        cd swarms-rs
+        cargo doc-coverage --output-format json > doc-coverage.json || true
+        
+        # Generate a simple report
+        echo "=== Documentation Coverage Report ===" > doc-coverage-report.txt
+        if [ -f doc-coverage.json ]; then
+          echo "Coverage data generated successfully" >> doc-coverage-report.txt
+          cat doc-coverage.json >> doc-coverage-report.txt
+        else
+          echo "No coverage data available" >> doc-coverage-report.txt
+        fi
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: doc-coverage-report
+        path: swarms-rs/doc-coverage*
+        retention-days: 30
+
+  examples-docs:
+    name: Build Examples Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo registry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-examples-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Generate examples documentation
+      run: |
+        mkdir -p docs/examples
+        
+        # Create examples index
+        cat > docs/examples/index.md << 'EOF'
+        # Examples Documentation
+        
+        This directory contains comprehensive examples demonstrating the capabilities of swarms-rs.
+        
+        ## Core Examples
+        
+        EOF
+        
+        # Process examples in swarms-rs
+        cd swarms-rs/examples
+        for example in *.rs; do
+          if [ -f "$example" ]; then
+            echo "Processing example: $example"
+            echo "### $(basename "$example" .rs)" >> ../../docs/examples/index.md
+            echo "" >> ../../docs/examples/index.md
+            echo '```rust' >> ../../docs/examples/index.md
+            head -50 "$example" >> ../../docs/examples/index.md
+            echo '```' >> ../../docs/examples/index.md
+            echo "" >> ../../docs/examples/index.md
+          fi
+        done
+
+    - name: Upload examples documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: examples-documentation
+        path: docs/
+        retention-days: 30
