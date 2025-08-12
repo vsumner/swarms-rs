@@ -18,30 +18,36 @@
 </p>
 
 <p align="center">
-    <a href="https://twitter.com/swarms_corp/">🐦 Twitter</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://discord.gg/EamjgSaEQf">📢 Discord</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://swarms.ai">Swarms Website</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://docs.swarms.world">📙 Documentation</a>
-    <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://swarms.world">Swarms Marketplace</a>
+    <a href="https://twitter.com/swarms_corp/">
+        <img alt="Twitter" src="https://img.shields.io/badge/Twitter-@swarms__corp-1da1f2?style=for-the-badge&logo=twitter" />
+    </a>
+    <a href="https://discord.gg/EamjgSaEQf">
+        <img alt="Discord" src="https://img.shields.io/discord/1202327470812078080?label=Discord&logo=discord&style=for-the-badge&color=5865F2" />
+    </a>
+    <a href="https://swarms.ai">
+        <img alt="Website" src="https://img.shields.io/badge/Swarms%20Website-swarms.ai-0a192f?style=for-the-badge&logo=firefox-browser" />
+    </a>
+    <a href="https://docs.swarms.world">
+        <img alt="Documentation" src="https://img.shields.io/badge/Documentation-docs.swarms.world-blueviolet?style=for-the-badge&logo=readthedocs" />
+    </a>
+    <a href="https://swarms.world">
+        <img alt="Marketplace" src="https://img.shields.io/badge/Marketplace-swarms.world-ffb300?style=for-the-badge&logo=shopify" />
+    </a>
 </p>
 
 <p align="center">
     <!-- Project Stats for swarms-rs -->
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/issues">
-        <img src="https://img.shields.io/github/issues/The-Swarm-Corporation/swarms-rs" alt="GitHub issues">
+        <img src="https://img.shields.io/github/issues/The-Swarm-Corporation/swarms-rs?style=for-the-badge&color=blueviolet" alt="GitHub issues">
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/network">
-        <img src="https://img.shields.io/github/forks/The-Swarm-Corporation/swarms-rs" alt="GitHub forks">
+        <img src="https://img.shields.io/github/forks/The-Swarm-Corporation/swarms-rs?style=for-the-badge&color=blue" alt="GitHub forks">
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/stargazers">
-        <img src="https://img.shields.io/github/stars/The-Swarm-Corporation/swarms-rs" alt="GitHub stars">
+        <img src="https://img.shields.io/github/stars/The-Swarm-Corporation/swarms-rs?style=for-the-badge&color=yellow" alt="GitHub stars">
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/The-Swarm-Corporation/swarms-rs" alt="GitHub license">
+        <img src="https://img.shields.io/github/license/The-Swarm-Corporation/swarms-rs?style=for-the-badge&color=success" alt="GitHub license">
     </a>
 </p>
 
