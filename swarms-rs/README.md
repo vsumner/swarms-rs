@@ -30,22 +30,6 @@
 </p>
 
 <p align="center">
-    <!-- Social Media -->
-    <a href="https://discord.gg/jHnrkH5y">
-        <img src="https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord">
-    </a>
-    <a href="https://www.youtube.com/@kyegomez3242">
-        <img src="https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube">
-    </a>
-    <a href="https://www.linkedin.com/in/kye-g-38759a207/">
-        <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-    </a>
-    <a href="https://x.com/kyegomezb">
-        <img src="https://img.shields.io/badge/X.com-Follow-1DA1F2?style=for-the-badge&logo=x&logoColor=white" alt="X.com">
-    </a>
-</p>
-
-<p align="center">
     <!-- Project Stats for swarms-rs -->
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/issues">
         <img src="https://img.shields.io/github/issues/The-Swarm-Corporation/swarms-rs" alt="GitHub issues">
@@ -58,9 +42,6 @@
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/The-Swarm-Corporation/swarms-rs" alt="GitHub license">
-    </a>
-    <a href="https://star-history.com/#The-Swarm-Corporation/swarms-rs">
-        <img src="https://img.shields.io/github/stars/The-Swarm-Corporation/swarms-rs?style=social" alt="GitHub star chart">
     </a>
 </p>
 
