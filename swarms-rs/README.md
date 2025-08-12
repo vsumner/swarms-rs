@@ -46,21 +46,21 @@
 </p>
 
 <p align="center">
-    <!-- Project Stats -->
-    <a href="https://github.com/kyegomez/swarms/issues">
-        <img src="https://img.shields.io/github/issues/kyegomez/swarms" alt="GitHub issues">
+    <!-- Project Stats for swarms-rs -->
+    <a href="https://github.com/The-Swarm-Corporation/swarms-rs/issues">
+        <img src="https://img.shields.io/github/issues/The-Swarm-Corporation/swarms-rs" alt="GitHub issues">
     </a>
-    <a href="https://github.com/kyegomez/swarms/network">
-        <img src="https://img.shields.io/github/forks/kyegomez/swarms" alt="GitHub forks">
+    <a href="https://github.com/The-Swarm-Corporation/swarms-rs/network">
+        <img src="https://img.shields.io/github/forks/The-Swarm-Corporation/swarms-rs" alt="GitHub forks">
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/stargazers">
-        <img src="https://github.com/The-Swarm-Corporation/swarms-rs" alt="GitHub stars">
+        <img src="https://img.shields.io/github/stars/The-Swarm-Corporation/swarms-rs" alt="GitHub stars">
     </a>
     <a href="https://github.com/The-Swarm-Corporation/swarms-rs/blob/main/LICENSE">
-        <img src="https://github.com/The-Swarm-Corporation/swarms-rs" alt="GitHub license">
+        <img src="https://img.shields.io/github/license/The-Swarm-Corporation/swarms-rs" alt="GitHub license">
     </a>
-    <a href="https://star-history.com/#kyegomez/swarms">
-        <img src="https://img.shields.io/github/stars/kyegomez/swarms?style=social" alt="GitHub star chart">
+    <a href="https://star-history.com/#The-Swarm-Corporation/swarms-rs">
+        <img src="https://img.shields.io/github/stars/The-Swarm-Corporation/swarms-rs?style=social" alt="GitHub star chart">
     </a>
 </p>
 
