@@ -20,7 +20,7 @@
 <p align="center">
     <a href="https://twitter.com/swarms_corp/">🐦 Twitter</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://discord.gg/jM3Z6M9uMq">📢 Discord</a>
+    <a href="https://discord.gg/EamjgSaEQf">📢 Discord</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
     <a href="https://swarms.ai">Swarms Website</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>

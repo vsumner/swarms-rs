@@ -20,7 +20,7 @@
 <p align="center">
     <a href="https://twitter.com/swarms_corp/">🐦 Twitter</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-    <a href="https://discord.gg/jM3Z6M9uMq">📢 Discord</a>
+    <a href="https://discord.gg/EamjgSaEQf">📢 Discord</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
     <a href="https://swarms.ai">Swarms Website</a>
     <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
@@ -95,7 +95,7 @@
 
 ## Overview
 
-`swarms-rs` is an enterprise-grade, production-ready multi-agent orchestration framework built in Rust, designed to handle the most demanding tasks with unparalleled speed and efficiency. Leveraging Rust's bleeding-edge performance and safety features, `swarms-rs` provides a powerful and scalable solution for orchestrating complex multi-agent systems across various industries.
+`swarms-rs` is the first-ever enterprise-grade, production-ready multi-agent orchestration framework built in Rust, designed to handle the most demanding tasks with unparalleled speed and efficiency. By leveraging Rust's cutting-edge performance and safety features, `swarms-rs` provides a powerful and scalable solution for orchestrating complex multi-agent systems across various industries.
 
 
 ## 🌐 Available Languages
@@ -132,25 +132,49 @@
 
 There are several ways to install and use `swarms-rs`:
 
-1. **Using Cargo (Recommended)**
-   Add `swarms-rs` to your `Cargo.toml`:
-
-   ```toml
-   [dependencies]
-   swarms-rs = "0.1.7"
-
-   # Or use the latest version from GitHub
-   # swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
-   ```
-
-2. **Install as a Binary**
-   Install `swarms-rs` globally using cargo:
+1. **Automatic Latest Version (Recommended)**
+   To always get the latest published version automatically:
 
    ```bash
+   # Add the latest version to your project
+   cargo add swarms-rs
+   
+   # Or install as a binary with latest version
    cargo install swarms-rs
    ```
 
-3. **From Source**
+2. **Using Cargo.toml with Version Ranges**
+   Add `swarms-rs` to your `Cargo.toml` with automatic updates:
+
+   ```toml
+   [dependencies]
+   # Automatically get compatible updates (e.g., 0.1.8 -> 0.1.9, but not 0.2.0)
+   swarms-rs = "^0.1.8"
+   
+   # Or use wildcard for patch updates only (e.g., 0.1.8 -> 0.1.9)
+   swarms-rs = "~0.1.8"
+   
+   # Or use latest from crates.io (not recommended for production)
+   swarms-rs = "*"
+   ```
+
+3. **Latest from GitHub (Development)**
+   Always get the cutting-edge version from GitHub:
+
+   ```toml
+   [dependencies]
+   swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs", branch = "main" }
+   ```
+
+4. **Manual Version Specification**
+   Pin to a specific version:
+
+   ```toml
+   [dependencies]
+   swarms-rs = "0.1.8"  # Exact version
+   ```
+
+5. **From Source**
    Clone and build from source:
 
    ```bash
@@ -159,20 +183,18 @@ There are several ways to install and use `swarms-rs`:
    cargo build --release
    ```
 
-4. **Using Git Dependencies**
-   Add directly from GitHub in your `Cargo.toml`:
+6. **Check for Updates**
+   To check for and update to the latest version:
 
-   ```toml
-   [dependencies]
-   swarms-rs = { git = "https://github.com/The-Swarm-Corporation/swarms-rs" }
-   ```
-
-5. **Using Specific Version**
-   Install a specific version:
-
-   ```toml
-   [dependencies]
-   swarms-rs = "0.1.7"  # Replace with desired version
+   ```bash
+   # Check for outdated dependencies
+   cargo outdated
+   
+   # Update all dependencies to latest compatible versions
+   cargo update
+   
+   # Update to latest version (may require Cargo.toml changes)
+   cargo upgrade  # Requires cargo-edit: cargo install cargo-edit
    ```
 
 -------
@@ -190,59 +212,13 @@ DEEPSEEK_API_KEY=your_deepseek_key_here
 DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
 ```
 
-## Framework Architecture
-
-In swarms-rs, we modularize the framework into three primary architectural stages, each building upon the previous to create increasingly sophisticated agent systems:
-
-
-```mermaid
-graph TD
-    A[Framework Architecture] --> B[1. Agent Layer]
-    A --> C[2. Multi-Agent Structures]
-    A --> D[3. Cascading Systems]
-    
-    B --> B1[LLM Integration]
-    B --> B2[Tool System]
-    B --> B3[Memory Management]
-    
-    C --> C1[Sequential Workflow]
-    C --> C2[Concurrent Workflow]
-    C --> C3[Communication Protocols]
-    
-    D --> D1[Agent Networks]
-    D --> D2[Hierarchical Systems]
-    D --> D3[Swarm Intelligence]
-```
-
-1. **Agents (LLM + Tools + Memory)**
-   - **Language Models**: Integration with various LLM providers (OpenAI, DeepSeek, etc.)
-   - **Tool System**: Extensible framework for adding capabilities through MCP and custom tools
-   - **Memory Management**: Short-term and long-term memory systems for maintaining context
-   - **State Management**: Handling agent state, configuration, and runtime parameters
-
-2. **Multi-Agent Structures and Communication**
-   - **Sequential Workflows**: Linear progression of tasks between multiple agents
-   - **Concurrent Workflows**: Parallel execution of tasks across multiple agents
-   - **Communication Protocols**: Standardized methods for inter-agent communication
-   - **Task Distribution**: Intelligent distribution of workload across agent networks
-   - **Synchronization**: Mechanisms for coordinating agent activities and sharing results
-
-3. **Cascading Multi-Agent Systems**
-   - **Hierarchical Organizations**: Multi-level agent structures with specialized roles
-   - **Swarm Intelligence**: Emergent behavior from large-scale agent interactions
-   - **Dynamic Scaling**: Ability to scale agent networks based on workload
-   - **Fault Tolerance**: Robust error handling and system recovery
-   - **Resource Optimization**: Efficient allocation and utilization of system resources
-
-This modular architecture allows for flexible deployment scenarios, from simple single-agent applications to complex, distributed multi-agent systems. Each layer is designed to be extensible, allowing developers to customize and enhance functionality while maintaining the core benefits of the framework's enterprise-grade reliability and performance.
-
-
-
 ------------
 
 
+## Quickstart
 
-## Agents
+
+### Agents
 
 An agent is an entity powered by an LLM equippied with tools and memory that can run autonomously to automate issues. Here's an examp
 
@@ -526,16 +502,67 @@ cargo run --example graph_workflow
 
 ----
 
+
+## Framework Architecture
+
+In swarms-rs, we modularize the framework into three primary architectural stages, each building upon the previous to create increasingly sophisticated agent systems:
+
+
+```mermaid
+graph TD
+    A[Framework Architecture] --> B[1. Agent Layer]
+    A --> C[2. Multi-Agent Structures]
+    A --> D[3. Cascading Systems]
+    
+    B --> B1[LLM Integration]
+    B --> B2[Tool System]
+    B --> B3[Memory Management]
+    
+    C --> C1[Sequential Workflow]
+    C --> C2[Concurrent Workflow]
+    C --> C3[Communication Protocols]
+    
+    D --> D1[Agent Networks]
+    D --> D2[Hierarchical Systems]
+    D --> D3[Swarm Intelligence]
+```
+
+1. **Agents (LLM + Tools + Memory)**
+   - **Language Models**: Integration with various LLM providers (OpenAI, DeepSeek, etc.)
+   - **Tool System**: Extensible framework for adding capabilities through MCP and custom tools
+   - **Memory Management**: Short-term and long-term memory systems for maintaining context
+   - **State Management**: Handling agent state, configuration, and runtime parameters
+
+2. **Multi-Agent Structures and Communication**
+   - **Sequential Workflows**: Linear progression of tasks between multiple agents
+   - **Concurrent Workflows**: Parallel execution of tasks across multiple agents
+   - **Communication Protocols**: Standardized methods for inter-agent communication
+   - **Task Distribution**: Intelligent distribution of workload across agent networks
+   - **Synchronization**: Mechanisms for coordinating agent activities and sharing results
+
+3. **Cascading Multi-Agent Systems**
+   - **Hierarchical Organizations**: Multi-level agent structures with specialized roles
+   - **Swarm Intelligence**: Emergent behavior from large-scale agent interactions
+   - **Dynamic Scaling**: Ability to scale agent networks based on workload
+   - **Fault Tolerance**: Robust error handling and system recovery
+   - **Resource Optimization**: Efficient allocation and utilization of system resources
+
+This modular architecture allows for flexible deployment scenarios, from simple single-agent applications to complex, distributed multi-agent systems. Each layer is designed to be extensible, allowing developers to customize and enhance functionality while maintaining the core benefits of the framework's enterprise-grade reliability and performance.
+
+
+
 ## Architecture
 
 `swarms-rs` is built with a modular architecture that allows for easy extension and customization:
 
-- **Agent Layer**: Core agent implementation with memory management and tool integration
-- **LLM Provider Layer**: Abstraction for different LLM providers (OpenAI, DeepSeek, etc.)
-- **Tool System**: Extensible tool framework for adding capabilities to agents
-- **MCP Integration**: Support for Model Context Protocol tools via STDIO and SSE interfaces
-- **Swarm Orchestration**: Coordination of multiple agents for complex workflows
-- **Persistence Layer**: State management and recovery mechanisms
+| Layer/Component         | Description                                                                                      |
+|------------------------|--------------------------------------------------------------------------------------------------|
+| **Agent Layer**        | Core agent implementation with memory management and tool integration                            |
+| **LLM Provider Layer** | Abstraction for different LLM providers (OpenAI, DeepSeek, etc.)                                 |
+| **Tool System**        | Extensible tool framework for adding capabilities to agents                                       |
+| **MCP Integration**    | Support for Model Context Protocol tools via STDIO and SSE interfaces                            |
+| **Swarm Orchestration**| Coordination of multiple agents for complex workflows                                            |
+| **Persistence Layer**  | State management and recovery mechanisms                                                         |
 
 ---------
 
@@ -580,7 +607,7 @@ Join our growing community around the world for real-time support, ideas, and di
 |----------|------|-------------|
 | 📚 Documentation | [docs.swarms.world](https://docs.swarms.world) | Official documentation and guides |
 | 📝 Blog | [Medium](https://medium.com/@kyeg) | Latest updates and technical articles |
-| 💬 Discord | [Join Discord](https://discord.gg/jM3Z6M9uMq) | Live chat and community support |
+| 💬 Discord | [Join Discord](https://discord.gg/EamjgSaEQf) | Live chat and community support |
 | 🐦 Twitter | [@kyegomez](https://twitter.com/kyegomez) | Latest news and announcements |
 | 👥 LinkedIn | [The Swarm Corporation](https://www.linkedin.com/company/the-swarm-corporation) | Professional network and updates |
 | 📺 YouTube | [Swarms Channel](https://www.youtube.com/channel/UC9yXyitkbU_WSy7bd_41SqQ) | Tutorials and demos |
@@ -600,7 +627,7 @@ For more details, please read our [Contributing Guidelines](CONTRIBUTING.md).
 
 ### Join Our Discord
 
-Join our [Discord community](https://discord.gg/jM3Z6M9uMq) to:
+Join our [Discord community](https://discord.gg/EamjgSaEQf) to:
 
 - Get real-time support
 - Share your ideas and feedback
