@@ -97,11 +97,23 @@ fn mul(x: f64, y: f64) -> Result<f64, CalcError> {
 /// Example showing how to use the required field
 #[tool(
     description = "Get weather information for a location",
-    arg(location, description = "City and country e.g. Bogotá, Colombia", required = true),
-    arg(unit, description = "Temperature unit (celsius or fahrenheit)", required = false)
+    arg(
+        location,
+        description = "City and country e.g. Bogotá, Colombia",
+        required = true
+    ),
+    arg(
+        unit,
+        description = "Temperature unit (celsius or fahrenheit)",
+        required = false
+    )
 )]
 fn get_weather(location: String, unit: Option<String>) -> Result<String, CalcError> {
-    tracing::info!("Get weather tool is called with location: {}, unit: {:?}", location, unit);
+    tracing::info!(
+        "Get weather tool is called with location: {}, unit: {:?}",
+        location,
+        unit
+    );
     let unit = unit.unwrap_or_else(|| "celsius".to_string());
     Ok(format!("Weather in {}: 25°{}", location, unit))
 }
@@ -148,10 +160,14 @@ struct UserProfile {
 #[tool(description = "Create a user profile")]
 fn create_user_profile(profile: UserProfile) -> Result<String, CalcError> {
     tracing::info!("Create user profile tool is called");
-    let email = profile.email.unwrap_or_else(|| "No email provided".to_string());
+    let email = profile
+        .email
+        .unwrap_or_else(|| "No email provided".to_string());
     let bio = profile.bio.unwrap_or_else(|| "No bio provided".to_string());
-    Ok(format!("Created profile for {} (age: {}) with email: {} and bio: {}", 
-               profile.name, profile.age, email, bio))
+    Ok(format!(
+        "Created profile for {} (age: {}) with email: {} and bio: {}",
+        profile.name, profile.age, email, bio
+    ))
 }
 
 /// ## IMPORTANT
