@@ -1,8 +1,10 @@
-use dotenv::dotenv;
 use std::env;
-use swarms_rs::logging::{
-    init_logger, log_agent_init, log_agent_state_change, log_agent_task_completion,
-};
+use std::sync::Once;
+use colored::Colorize;
+use swarms_rs::logging::init_logger;
+use swarms_rs::{log_agent, log_task, log_tool, log_memory, log_llm};
+
+static INIT: Once = Once::new();
 
 #[cfg(test)]
 mod tests {
@@ -10,8 +12,12 @@ mod tests {
 
     #[test]
     pub fn test_logger_initialization() {
-        env::set_var("SWARMS_LOG_LEVEL", "DEBUG");
-        init_logger();
+        INIT.call_once(|| {
+            unsafe {
+                env::set_var("SWARMS_LOG_LEVEL", "DEBUG");
+            }
+            init_logger();
+        });
 
         log::info!("Test log message");
         log::debug!("Test debug message");
@@ -19,9 +25,13 @@ mod tests {
     }
 
     #[test]
-    pub unsafe fn test_agent_logging_macros() {
-        env::set_var("SWARMS_LOG_LEVEL", "TRACE");
-        init_logger();
+    pub fn test_agent_logging_macros() {
+        INIT.call_once(|| {
+            unsafe {
+                env::set_var("SWARMS_LOG_LEVEL", "TRACE");
+            }
+            init_logger();
+        });
 
         log_agent!(info, "TestAgent", "agent-123", "Agent started successfully");
         log_task!(
