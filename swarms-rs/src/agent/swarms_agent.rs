@@ -928,7 +928,8 @@ pub struct ToolCallOutput {
     pub result: String,
 }
 
-#[tool(description = r#"
+#[tool(
+    description = r#"
     **Important**
     If previous message is a `task_evaluator` call, then you shouldn't call this tool.
 
@@ -936,16 +937,28 @@ pub struct ToolCallOutput {
     Finalize or request refinement for the current task.
     
     Call this when:
-    - All user requirements are fully satisfied (set `Complete`)
+    - All user requirements are fully satisfied (set status to "Complete")
     - Avoids unnecessary iterations, redundancy, or waste.
-    - Additional input/clarification is needed (set `Incomplete` with context)
+    - Additional input/clarification is needed (set status to "Incomplete" with context)
     
-    When `Complete`, the context is ignored, because the dialogue will terminate.
-    When `Incomplete`, your context becomes the system's next prompt, enabling iterative task refinement.
+    When status is "Complete", the context is ignored, because the dialogue will terminate.
+    When status is "Incomplete", your context becomes the system's next prompt, enabling iterative task refinement.
     Provide clear, actionable contexts to guide the next steps, the context should be used to guide yourself to complete the task.
-"#)]
-fn task_evaluator(status: TaskStatus) -> Result<TaskStatus, TaskEvaluatorError> {
-    Ok(status)
+"#,
+    arg(status, description = "Task status: either 'Complete' or 'Incomplete'"),
+    arg(context, description = "Context for incomplete tasks - guidance for next steps")
+)]
+fn task_evaluator(status: String, context: Option<String>) -> Result<TaskStatus, TaskEvaluatorError> {
+    match status.as_str() {
+        "Complete" => Ok(TaskStatus::Complete),
+        "Incomplete" => {
+            let context = context.unwrap_or_else(|| "Task needs further work".to_string());
+            Ok(TaskStatus::Incomplete { context })
+        }
+        _ => Ok(TaskStatus::Incomplete { 
+            context: format!("Invalid status '{}', treating as incomplete", status) 
+        })
+    }
 }
 
 /// Tracks task status and provides feedback for incomplete tasks.

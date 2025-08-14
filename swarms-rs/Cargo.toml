@@ -1,6 +1,6 @@
 [package]
 name = "swarms-rs"
-version = "0.1.8"
+version = "0.2.0"
 edition = "2024"
 description = "The Enterprise-Grade Production-Ready Multi-Agent Orchestration Framework in Rust"
 authors = ["Kye Gomez <kye@kyegomez.com>"]

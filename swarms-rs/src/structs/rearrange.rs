@@ -247,8 +247,10 @@ pub struct AgentRearrange {
     /// Conversation history and management
     conversation: AgentConversation,
     /// Metadata mapping for agent interactions
+    #[allow(dead_code)]
     metadata_map: MetadataSchemaMap,
     /// Set of active tasks
+    #[allow(dead_code)]
     tasks: DashSet<String>,
     /// Rules to inject into all agents
     rules: Option<String>,

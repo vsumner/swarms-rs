@@ -221,7 +221,7 @@ impl SwarmRouter {
         let result = match self {
             SwarmRouter::SequentialWorkflow(wf) => wf.run(task).await?,
             SwarmRouter::ConcurrentWorkflow(wf) => wf.run(task).await?,
-            SwarmRouter::AgentRearrange(ar) => {
+            SwarmRouter::AgentRearrange(_ar) => {
                 // AgentRearrange doesn't return AgentConversation directly, so we create one
                 let conversation = AgentConversation::new("AgentRearrange".to_string());
                 // For now, we'll just return a basic conversation
