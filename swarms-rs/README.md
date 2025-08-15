@@ -179,7 +179,7 @@ DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
 
 ### Agents
 
-An agent is an entity powered by an LLM equippied with tools and memory that can run autonomously to automate issues. Here's an examp
+An agent is an entity powered by an LLM equippied with tools and memory that can run autonomously to automate issues. Here's an example:
 
 ```rust
 use std::env;
