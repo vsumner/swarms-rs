@@ -60,8 +60,8 @@
 ## 🌐 Available Languages
 
 - [English](README.md)
-- [中文](README.zh.md)
-- [日本語](README.ja.md)
+- [中文](docs/README.zh.md)
+- [日本語](docs/README.ja.md)
 
 ## Key Benefits
 
