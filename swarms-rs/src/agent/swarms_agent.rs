@@ -446,7 +446,7 @@ where
     }
 
     pub fn build(mut self) -> SwarmsAgent<M> {
-        if self.config.verbose {
+        if self.config.verbose && log::log_enabled!(log::Level::Info) {
             log::info!(
                 "🏗️  Building SwarmsAgent: {}",
                 self.config.name.bright_cyan().bold()
@@ -476,7 +476,7 @@ where
             tools_impl: self.tools_impl,
         };
 
-        if agent.config.verbose {
+        if agent.config.verbose && log::log_enabled!(log::Level::Info) {
             log::info!(
                 "✅ SwarmsAgent built successfully: {} (ID: {}) with {} tools",
                 agent.config.name.bright_cyan().bold(),

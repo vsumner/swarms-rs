@@ -232,11 +232,11 @@ impl Default for AgentConfig {
             stop_words: HashSet::with_capacity(16), // Pre-allocate capacity
             task_evaluator_tool_enabled: true,
             concurrent_tool_call_enabled: true,
-            verbose: true, // Default to verbose logging
+            verbose: false, // Default to verbose logging
             response_cache: HashMap::with_capacity(100), // Pre-allocate cache capacity
         };
         
-        if config.verbose {
+        if config.verbose && log::log_enabled!(log::Level::Debug) {
             log::debug!(
                 "🆕 Creating default agent configuration with ID: {}",
                 id.bright_yellow()
