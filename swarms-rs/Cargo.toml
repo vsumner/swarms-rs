@@ -15,7 +15,7 @@ chrono = { version = "0.4", features = ["serde"] }
 dashmap = { version = "6", features = ["serde"] }
 schemars = { version = "0.8", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde_json = "1.0"
 erased-serde = "0.4"
 futures = "0.3"
 uuid = { version = "1.15", features = ["v4", "serde"] }
@@ -30,7 +30,7 @@ zstd = "0.13.3"
 dotenv = "0.15"
 log = "0.4"
 env_logger = "0.11"
-colored = "3.0.0"
+tabled = "0.20"
 petgraph = { version = "0.7", default-features = false, features = [
     "stable_graph",
 ] }
@@ -51,6 +51,7 @@ hyper-util = { version = "0.1", features = ["client", "client-legacy", "http1"] 
 hyper-tls = "0.6"
 bytes = "1.0"
 http-body-util = "0.1"
+webpki-roots = "0.26"
 
 # macro
 swarms-macro = { version = "0.1.0", path = "../swarms-macro" }
@@ -77,17 +78,6 @@ harness = false
 name = "agent_initialization_benchmarks"
 harness = false
 
-[[example]]
-name = "basic_usage"
-path = "examples/api_client_examples/basic_usage.rs"
-
-[[example]]
-name = "batch_operations"
-path = "examples/api_client_examples/batch_operations.rs"
-
-[[example]]
-name = "error_handling"
-path = "examples/api_client_examples/error_handling.rs"
 
 [[example]]
 name = "logging_example"
@@ -96,3 +86,15 @@ path = "examples/logging_example.rs"
 [[example]]
 name = "anthropic_claude_agent"
 path = "examples/anthropic_claude_agent.rs"
+
+[[example]]
+name = "gold_etf_analysis"
+path = "examples/gold_etf_analysis.rs"
+
+[[example]]
+name = "swarm_router"
+path = "examples/swarm_router.rs"
+
+[[example]]
+name = "pretty_print_example"
+path = "examples/pretty_print_example.rs"
