@@ -466,6 +466,21 @@ impl From<llm::completion::Audio>
     }
 }
 
+/// Sanitizes tool input by replacing object values with null for fields expecting strings
+///
+/// Some LLM providers (Claude via proxy) send objects (empty `{}` or non-empty) for optional
+/// string parameters, but serde expects either a string, `null`, or the field to be omitted.
+/// This function converts object values to `null` to ensure compatibility with tool deserialization.
+fn sanitize_tool_input(input: &mut serde_json::Value) {
+    if let Some(obj) = input.as_object_mut() {
+        for (_, v) in obj.iter_mut() {
+            if v.is_object() {
+                *v = serde_json::Value::Null;
+            }
+        }
+    }
+}
+
 impl From<async_openai::types::CreateChatCompletionResponse>
     for llm::CompletionResponse<async_openai::types::CreateChatCompletionResponse>
 {
@@ -486,11 +501,15 @@ impl From<async_openai::types::CreateChatCompletionResponse>
                     let tool_calls = tool_calls
                         .iter()
                         .map(|tool_call| {
+                            let mut input: serde_json::Value = serde_json::from_str(&tool_call.function.arguments)
+                                .expect("OpenAI return invalid json");
+
+                            sanitize_tool_input(&mut input);
+
                             llm::completion::AssistantContent::tool_call(
                                 tool_call.id.clone(),
                                 tool_call.function.name.clone(),
-                                serde_json::from_str(&tool_call.function.arguments)
-                                    .expect("OpenAI return invalid json"),
+                                input,
                             )
                         })
                         .collect::<Vec<_>>();

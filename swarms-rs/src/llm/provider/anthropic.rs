@@ -793,6 +793,21 @@ fn convert_assistant_content_to_anthropic(
     Ok(result)
 }
 
+/// Sanitizes tool input by replacing object values with null for fields expecting strings
+///
+/// Claude models send objects (empty `{}` or non-empty) for optional string parameters,
+/// but serde expects either a string, `null`, or the field to be omitted. This function
+/// converts object values to `null` to ensure compatibility with tool deserialization.
+fn sanitize_tool_input(input: &mut serde_json::Value) {
+    if let Some(obj) = input.as_object_mut() {
+        for (_, v) in obj.iter_mut() {
+            if v.is_object() {
+                *v = serde_json::Value::Null;
+            }
+        }
+    }
+}
+
 /// Convert Anthropic response to internal format
 fn convert_anthropic_response_to_internal(
     content: Vec<AnthropicContent>,
@@ -805,8 +820,10 @@ fn convert_anthropic_response_to_internal(
                 result.push(llm::completion::AssistantContent::text(text));
             },
             AnthropicContent::ToolUse {
-                id, name, input, ..
+                id, name, mut input, ..
             } => {
+                sanitize_tool_input(&mut input);
+
                 result.push(llm::completion::AssistantContent::tool_call(
                     id, name, input,
                 ));
