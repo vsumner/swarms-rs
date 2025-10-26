@@ -92,6 +92,8 @@ use std::{
     sync::Arc,
 };
 
+use twox_hash::XxHash64;
+
 use dashmap::DashMap;
 use futures::{StreamExt, future::BoxFuture, stream};
 use reqwest::IntoUrl;
@@ -112,7 +114,6 @@ use tokio::{
     process::Command,
     sync::{Mutex, mpsc},
 };
-use twox_hash::XxHash3_64;
 
 use crate::{
     self as swarms_rs,
@@ -1553,7 +1554,7 @@ where
     }
 
     fn save_task_state(&self, task: String) -> BoxFuture<Result<(), AgentError>> {
-        let mut hasher = XxHash3_64::default();
+        let mut hasher = XxHash64::default();
         task.hash(&mut hasher);
         let task_hash = hasher.finish();
         let task_hash = format!("{:x}", task_hash & 0xFFFFFFFF); // lower 32 bits of the hash
