@@ -54,10 +54,7 @@ impl BinanceMCPTools {
     }
 
     #[tool(description = "Get depth information.")]
-    async fn depth(
-        &self,
-        params: depth::DepthRequest,
-    ) -> Result<CallToolResult, MCPError> {
+    async fn depth(&self, params: depth::DepthRequest) -> Result<CallToolResult, MCPError> {
         let result = call_api_tool!(self, market_data::depth, params);
         Ok(result)
     }
@@ -88,10 +85,7 @@ impl BinanceMCPTools {
             10: Taker buy quote asset volume
             11: Unused field. Ignore.
         ")]
-    async fn klines(
-        &self,
-        params: klines::KlinesRequest,
-    ) -> Result<CallToolResult, MCPError> {
+    async fn klines(&self, params: klines::KlinesRequest) -> Result<CallToolResult, MCPError> {
         let result = call_api_tool!(self, market_data::klines, params);
         Ok(result)
     }
@@ -144,10 +138,7 @@ impl BinanceMCPTools {
     }
 
     #[tool(description = "Recent trades list.")]
-    async fn trades(
-        &self,
-        params: trades::TradesRequest,
-    ) -> Result<CallToolResult, MCPError> {
+    async fn trades(&self, params: trades::TradesRequest) -> Result<CallToolResult, MCPError> {
         let result = call_api_tool!(self, market_data::trades, params);
         Ok(result)
     }
